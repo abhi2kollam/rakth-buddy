@@ -1,0 +1,61 @@
+<nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow" style="height: 70px;">
+  <a class="navbar-brand col-sm-3 col-md-2 mr-0" routerLink="/home/list">
+    <img class="ms-2" style="height: 35px;" src="./assets/logo.svg"/>
+    <span class="dasboard-text">Rakth Buddy</span>
+  </a>
+  <ul class="navbar-nav px-3">
+    <div class="dropdown" *ngIf="authService.userData as user">
+      <button class="btn" type="button" id="dropdownMenuButton1" data-mdb-toggle="dropdown" aria-expanded="false">
+        <a class="nav-link p-0 border-0"  (click)="openUserMenu($event)" href="#">
+          <img class=" p-0 align-self-start user-image mr-5 img-thumbnail rounded-circle"
+            src="{{(user.photoURL) ? user.photoURL : '/assets/dummy-user.svg'}}" alt="{{user.displayName}}">
+        </a>
+      </button>
+      <ul class="dropdown-menu" id="dropdown-menu" [ngClass]="{'show':showMenu}" aria-labelledby="dropdownMenuButton1">
+        <li><a class="dropdown-item user-details">
+            <img class=" p-0  user-image mr-5 img-thumbnail rounded-circle"
+              src="{{(user.photoURL) ? user.photoURL : '/assets/dummy-user.svg'}}" alt="{{user.displayName}}" />
+             <strong class="text-center" >{{(user.displayName) ? user.displayName : 'User'}}</strong>
+             <p class="text-center text-black-50" style="font-size: .7rem;" >{{user.email}}</p>
+          </a>
+        </li>
+        <li (click)="installApp($event)"><a class="dropdown-item" href="#"> <i class="fas fa-arrow-down"></i>Install App</a>
+        <li (click)="checkForUpdates($event)"><a class="dropdown-item" href="#"> <i class="fas fa-retweet"></i>Check for updates</a>
+        <li (click)="logout($event)"><a class="dropdown-item" href="#"> <i class="fas fa-door-open pe-2"></i>Logout</a>
+        </li>
+      </ul>
+    </div>
+  </ul>
+</nav>
+
+<!-- Sidebar navigation -->
+<div class="container-fluid">
+  <div class="row">
+    <nav class="col-md-2 d-md-block bg-light sidebar">
+      <div class="sidebar-sticky">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/home/add" routerLinkActive="active">
+              <em class="fas fa-user-plus d-md-none" style="display: block;font-size: 1.5rem;"></em>
+              <span style="font-size: .7rem;">Add Donor</span>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/home/list" routerLinkActive="active">
+              <em class="fas fa-users d-md-none" style="display: block;font-size: 1.5rem;"></em>
+              <span style="font-size: .7rem;">Donor List</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Main content -->
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+      <div class="inner-adjust">
+        <router-outlet></router-outlet>
+      </div>
+    </main>
+  </div>
+</div>
