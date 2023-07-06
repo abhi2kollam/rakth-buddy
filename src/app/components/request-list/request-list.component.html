@@ -1,0 +1,60 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+  <input type="text" class="search" [(ngModel)]="searchText" placeholder="Search">
+</div>
+
+<div class="no-data text-center" *ngIf="!requests?.length">
+  <p class="nodata-msg">No requests added yet!</p>
+</div>
+
+<div class="pricing-header mx-auto">
+  <div class="table-responsive">
+    <table class="table table-bordered table-responsive-sm table-responsive-md table-responsive-lg">
+      <thead class="table-head">
+        <tr>
+          <th scope="col">User Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="
+            let request of requests
+              | filter: searchText
+              | paginate: { itemsPerPage: 10, currentPage: p };
+            let i = index
+          ">
+          <td class="p-0">
+            <div class=" p-2 d-flex justify-content-between align-items-center">
+              <div class="row align-items-end flex-grow-1">
+                <span class="col-md-6 text-break" style="font-size: .7rem;">
+                  <strong class="fs-6">{{ request.requesterName }}</strong>({{request.requesterEmail}}) has requested
+                  contact info of
+                  <strong class="fs-6">
+                    {{request.donorName}}</strong> (Dist:{{request.donorDistrict}})
+                </span>
+                <span class="col-md-6" style="font-size: .7rem;">
+                  <span class="btn btn-outline-success btn-sm me-2 mb-md-2">
+                    <a style="text-decoration: none;" href="tel:{{request.donorMobile}}"><em class="fas fa-phone fa-rotate-90"></em> Donor
+                      ({{request.donorName}})</a>
+                  </span>
+                  <span *ngIf="request.requesterMobile" class="btn btn-outline-success btn-sm me-2">
+                    <a  style="text-decoration: none;" href="tel:{{request.requesterMobile}}"><em class="fas fa-phone fa-rotate-90"></em> Requester
+                      ({{request.requesterName}})</a>
+                    </span>
+                </span>
+              </div>
+              <span class="">
+                <select [(ngModel)]="request.status" (change)="onDropdownChange(request)" [ngModelOptions]="{standalone:true}">
+                  <option value="approved">Approved</option>
+                  <option value="rejected">Rejected</option>
+                  <option value="pending">Pending</option>
+                  <option value="on-hold">On-Hold</option>
+                </select>
+              </span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <pagination-controls (pageChange)="p = $any($event)"></pagination-controls>
+</div>

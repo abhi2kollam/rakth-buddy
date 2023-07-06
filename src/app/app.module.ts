@@ -30,6 +30,7 @@ import { DonorListComponent } from './components/donor-list/donor-list.component
 import { FilterPipe } from './shared/filter.pipe';
 import { UserListComponent } from './components/user-list/user-list.component';
 import { EditUserComponent } from './components/edit-user/edit-user.component';
+import { RequestListComponent } from './components/request-list/request-list.component';
 
 
 @NgModule({
@@ -44,7 +45,8 @@ import { EditUserComponent } from './components/edit-user/edit-user.component';
     DonorListComponent,
     FilterPipe,
     UserListComponent,
-    EditUserComponent
+    EditUserComponent,
+    RequestListComponent
   ],
   imports: [
     BrowserModule,

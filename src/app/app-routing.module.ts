@@ -12,6 +12,8 @@ import { EditDonorComponent } from './components/edit-donor/edit-donor.component
 import { SuperAdminAuthGuard } from './shared/guard/super-admin.guard';
 import { UserListComponent } from './components/user-list/user-list.component';
 import { EditUserComponent } from './components/edit-user/edit-user.component';
+import { AdminAuthGuard } from './shared/guard/admin.guard';
+import { RequestListComponent } from './components/request-list/request-list.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/sign-in', pathMatch: 'full' },
@@ -30,6 +32,11 @@ const routes: Routes = [
         path: 'users',
         component: UserListComponent,
         canActivate: [SuperAdminAuthGuard],
+      },
+      {
+        path: 'requests',
+        component: RequestListComponent,
+        canActivate: [AdminAuthGuard],
       },
       { path: '', component: DonorListComponent, pathMatch: 'full' },
     ],

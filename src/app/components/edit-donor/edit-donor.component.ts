@@ -6,7 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 
 import { CrudService } from '../../shared/services/donor-crud.service';
 import { AuthService } from 'src/app/shared/services/auth.service';
-import { Donor } from 'src/app/shared/donor';
+import { Donor } from 'src/app/shared/models/donor';
 
 @Component({
   selector: 'app-edit-donor',

@@ -5,7 +5,7 @@ import {
   AngularFirestoreCollection,
   AngularFirestoreDocument,
 } from '@angular/fire/compat/firestore';
-import { UserExtended } from '../user';
+import { UserExtended } from '../models/user';
 
 @Injectable({
   providedIn: 'root',

@@ -1,4 +1,5 @@
 export interface Donor {
+  id: string;
   name: string;
   group: string;
   mobileNumber: number;

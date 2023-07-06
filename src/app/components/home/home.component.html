@@ -53,6 +53,12 @@
               <span style="font-size: .7rem;">Users List</span>
             </a>
           </li>
+          <li class="nav-item" *ngIf="authService.isAdmin()">
+            <a class="nav-link" routerLink="/home/requests" routerLinkActive="active">
+              <em class="fas fa-clipboard-check d-md-none" style="display: block;font-size: 1.5rem;"></em>
+              <span style="font-size: .7rem;">Requests</span>
+            </a>
+          </li>
         </ul>
       </div>
     </nav>

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Donor } from '../donor';
+import { Donor } from '../models/donor';
 
 import {
   AngularFirestore,
