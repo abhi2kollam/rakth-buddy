@@ -26,7 +26,7 @@
                 <span class="col-md-6" style="font-size: .7rem;">{{user.email}}</span>
               </div>
               <span class="border-1 border px-2 rounded border-info">{{ user.role }}</span>
-              <span class="ms-2 btn btn-outline-primary btn-sm" title="Edit" routerLink="/home/users/{{ user.id }}">
+              <span class="ms-2 btn btn-outline-primary btn-sm" title="Edit" routerLink="/home/{{currentUser?.uid}}/users/{{ user.id }}">
                 <em class="fas fa-pencil-alt"></em>
               </span>
             </div>

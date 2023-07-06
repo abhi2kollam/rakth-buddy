@@ -7,6 +7,7 @@ import { Donor } from '../../shared/models/donor';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { RequestCrudService } from 'src/app/shared/services/request-crud.service';
 import { RequestStatus } from 'src/app/shared/models/request';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-donor-list',
@@ -19,15 +20,17 @@ export class DonorListComponent implements OnInit {
   hideWhenNoDonor: boolean = false;
   noData: boolean = false;
   preLoader: boolean = true;
-
+  currentUser: any = {};
   constructor(
     public authService: AuthService,
     public crudApi: CrudService,
     public requestApi: RequestCrudService,
-    public toastr: ToastrService
+    public toastr: ToastrService,
+    public route: ActivatedRoute
   ) {}
 
   ngOnInit() {
+    this.currentUser = this.route.parent?.snapshot.data['data'];
     this.dataState();
     if (this.authService.isAdmin()) {
       let s = this.crudApi.getDonorsList();

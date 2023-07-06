@@ -23,13 +23,6 @@ export class AuthService {
   ) {
     this.afAuth.authState.subscribe((user) => {
       if (user) {
-        this.afs
-              .doc<UserExtended>(`users/${user.uid}`)
-              .valueChanges()
-              .subscribe((currentUser) => {
-                this.userRole = currentUser?.role ?? 'guest';
-                this.userData.displayName = currentUser?.displayName;
-              });
         this.userData = user.toJSON();
         localStorage.setItem('user', JSON.stringify(this.userData));
         JSON.parse(localStorage.getItem('user')!);
@@ -40,6 +33,11 @@ export class AuthService {
     });
   }
 
+  setCurrentUserInfo(currentUser: any) {
+    this.userRole = currentUser?.role ?? 'guest';
+    this.userData.displayName = currentUser?.displayName;
+  }
+
   // Sign in with email/password
   signIn(email: string, password: string) {
     return this.afAuth
@@ -48,7 +46,7 @@ export class AuthService {
         this.setUserData(result.user);
         this.afAuth.authState.pipe(take(1)).subscribe((user) => {
           if (user) {
-            this.router.navigate(['home', 'list']);
+            this.router.navigate(['home', user.uid, 'list']);
           }
         });
       })
@@ -126,7 +124,7 @@ export class AuthService {
     return this.authLogin(new auth.GoogleAuthProvider()).then((res: any) => {
       this.afAuth.authState.pipe(take(1)).subscribe((user) => {
         if (user) {
-          this.router.navigate(['home', 'list']);
+          this.router.navigate(['home', user.uid,'list']);
         }
       });
     });

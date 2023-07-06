@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { filter, map } from 'rxjs';
 
@@ -13,11 +14,17 @@ export class UserListComponent implements OnInit {
   p: number = 1;
   searchText = '';
   users: UserExtended[] = [];
+  currentUser: any = {};
 
-  constructor(public crudApi: UserCrudService, public toastr: ToastrService) {}
+  constructor(
+    public crudApi: UserCrudService,
+    private route: ActivatedRoute,
+    public toastr: ToastrService
+  ) {}
 
   ngOnInit() {
-    // this.dataState();
+    this.currentUser = this.route.parent?.snapshot.data['data'];
+
     this.crudApi
       .getAll()
       .snapshotChanges()

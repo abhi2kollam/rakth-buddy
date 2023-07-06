@@ -15,6 +15,8 @@ import { Donor } from 'src/app/shared/models/donor';
 export class EditDonorComponent implements OnInit {
   donor: Partial<Donor> = {};
   id: string | null = null;
+  currentUser: any = {};
+
   constructor(
     private crudApi: CrudService,
     private fb: FormBuilder,
@@ -22,10 +24,13 @@ export class EditDonorComponent implements OnInit {
     private actRoute: ActivatedRoute,
     private router: Router,
     private toastr: ToastrService,
-    private authService: AuthService
+    private authService: AuthService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
+    this.currentUser = this.route.parent?.snapshot.data['data'];
+
     this.id = this.actRoute.snapshot.paramMap.get('id') ?? null;
     if (this.id) {
       this.crudApi.getDonor(this.id).subscribe((snapshot) => {
@@ -50,7 +55,7 @@ export class EditDonorComponent implements OnInit {
       data.updatedTime = currentTime;
       this.crudApi.updateDonor(this.id, data);
       this.toastr.success(this.donor.name + ' updated successfully');
-      this.router.navigate(['home', 'list']);
+      this.router.navigate(['home', this.currentUser?.uid, 'list']);
     } else {
       data.createdBy = this.authService.userData.uid;
       data.createdTime = currentTime;

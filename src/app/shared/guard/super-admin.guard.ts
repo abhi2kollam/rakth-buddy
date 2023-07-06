@@ -11,7 +11,6 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-
 export class SuperAdminAuthGuard implements CanActivate {
   constructor(public authService: AuthService, public router: Router) {}
 
@@ -20,7 +19,7 @@ export class SuperAdminAuthGuard implements CanActivate {
     state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
     if (this.authService.isSuperAdmin !== true) {
-      this.router.navigate(['home','list']);
+      this.router.navigate(['home', this.authService.userData?.uid, 'list']);
     }
     return true;
   }

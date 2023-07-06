@@ -8,7 +8,7 @@
 
   <div class="no-data text-center" *ngIf="noData">
     <p class="nodata-msg">No donor added yet!</p>
-    <a routerLink="/home/add" class="btn btn-success"> Add Donor </a>
+    <a routerLink="/home/{{currentUser?.uid}}/add" class="btn btn-success"> Add Donor </a>
   </div>
 
   <div class="table-responsive" *ngIf="hideWhenNoDonor">
@@ -43,7 +43,7 @@
               <span class="btn btn-outline-success btn-sm" title="Call">
                 <a href="tel:{{donor.mobileNumber}}"><em class="fas fa-phone fa-rotate-90"></em></a>
               </span>
-              <span class=" btn btn-outline-primary btn-sm" title="Edit" routerLink="/home/edit/{{ donor.id}}"><em
+              <span class=" btn btn-outline-primary btn-sm" title="Edit" routerLink="/home/{{currentUser?.uid}}/edit/{{ donor.id}}"><em
                   class="fas fa-pencil-alt"></em></span>
               <span class="btn btn-outline-danger btn-sm" title="Delete" (click)="deleteDonor(donor)"><em
                   class="fas fa-trash-alt"></em></span>
@@ -56,7 +56,7 @@
             <span class=" me-2 btn btn-outline-success btn-sm" title="Call">
               <a href="tel:{{donor.mobileNumber}}"><em class="fas fa-phone fa-rotate-90"></em></a>
             </span>
-            <span class="me-2 btn btn-outline-primary btn-sm" title="Edit" routerLink="/home/edit/{{ donor.id }}"><em
+            <span class="me-2 btn btn-outline-primary btn-sm" title="Edit" routerLink="/home/{{currentUser?.uid}}/edit/{{ donor.id }}"><em
                 class="fas fa-pencil-alt"></em></span>
             <span class="me-2 btn btn-outline-danger btn-sm" title="Delete" (click)="deleteDonor(donor)"><em
                 class="fas fa-trash-alt"></em></span>

@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, HostListener, OnInit } from '@angular/core';
 
 import { AuthService } from '../../shared/services/auth.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -8,7 +9,7 @@ import { AuthService } from '../../shared/services/auth.service';
 })
 export class HomeComponent implements OnInit, AfterViewInit {
   showMenu = false;
-
+  currentUser: any = {};
   showInstallAppOption = false;
 
   @HostListener('window:click', ['$event'])
@@ -23,11 +24,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
     }
   }
 
-  constructor(public authService: AuthService) {}
+  constructor(public authService: AuthService, private route: ActivatedRoute) {}
 
   ngAfterViewInit(): void {}
 
   ngOnInit(): void {
+    this.currentUser = this.route.snapshot.data['data'];
+    this.authService.setCurrentUserInfo(this.currentUser);
     if (!window.matchMedia('(display-mode: standalone)').matches) {
       this.showInstallAppOption = true;
     }

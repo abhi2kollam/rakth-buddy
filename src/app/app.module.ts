@@ -31,7 +31,7 @@ import { FilterPipe } from './shared/filter.pipe';
 import { UserListComponent } from './components/user-list/user-list.component';
 import { EditUserComponent } from './components/edit-user/edit-user.component';
 import { RequestListComponent } from './components/request-list/request-list.component';
-
+import { DataResolver } from './shared/guard/data-resolver';
 
 @NgModule({
   declarations: [
@@ -46,7 +46,7 @@ import { RequestListComponent } from './components/request-list/request-list.com
     FilterPipe,
     UserListComponent,
     EditUserComponent,
-    RequestListComponent
+    RequestListComponent,
   ],
   imports: [
     BrowserModule,
@@ -64,11 +64,10 @@ import { RequestListComponent } from './components/request-list/request-list.com
       enabled: environment.production,
       // Register the ServiceWorker as soon as the application is stable
       // or after 30 seconds (whichever comes first).
-      registrationStrategy: 'registerWhenStable:30000'
+      registrationStrategy: 'registerWhenStable:30000',
     }),
   ],
-  providers: [AuthService],
+  providers: [AuthService, DataResolver],
   bootstrap: [AppComponent],
 })
-
 export class AppModule {}

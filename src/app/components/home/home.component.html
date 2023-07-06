@@ -1,5 +1,5 @@
 <nav class="navbar navbar-dark bg-dark flex-md-nowrap p-0 shadow" style="height: 70px;">
-  <a class="navbar-brand col-sm-3 col-md-2 mr-0" routerLink="/home/list">
+  <a class="navbar-brand col-sm-3 col-md-2 mr-0" routerLink="/home/{{currentUser?.uid}}/list">
     <img class="ms-2" style="height: 35px;" src="./assets/logo.svg"/>
     <span class="dasboard-text">Rakth Buddy</span>
   </a>
@@ -35,26 +35,26 @@
       <div class="sidebar-sticky">
         <ul class="nav flex-column">
           <li class="nav-item">
-            <a class="nav-link" routerLink="/home/add" routerLinkActive="active">
+            <a class="nav-link" routerLink="/home/{{currentUser.uid}}/add" routerLinkActive="active">
               <em class="fas fa-user-plus d-md-none" style="display: block;font-size: 1.5rem;"></em>
               <span style="font-size: .7rem;">Add Donor</span>
             </a>
           </li>
 
           <li class="nav-item">
-            <a class="nav-link" routerLink="/home/list" routerLinkActive="active">
+            <a class="nav-link" routerLink="/home/{{currentUser.uid}}/list" routerLinkActive="active">
               <em class="fas fa-users d-md-none" style="display: block;font-size: 1.5rem;"></em>
               <span style="font-size: .7rem;">Donor List</span>
             </a>
           </li>
           <li class="nav-item" *ngIf="authService.isSuperAdmin">
-            <a class="nav-link" routerLink="/home/users" routerLinkActive="active">
+            <a class="nav-link" routerLink="/home/{{currentUser.uid}}/users" routerLinkActive="active">
               <em class="fas fa-users d-md-none" style="display: block;font-size: 1.5rem;"></em>
               <span style="font-size: .7rem;">Users List</span>
             </a>
           </li>
           <li class="nav-item" *ngIf="authService.isAdmin()">
-            <a class="nav-link" routerLink="/home/requests" routerLinkActive="active">
+            <a class="nav-link" routerLink="/home/{{currentUser.uid}}/requests" routerLinkActive="active">
               <em class="fas fa-clipboard-check d-md-none" style="display: block;font-size: 1.5rem;"></em>
               <span style="font-size: .7rem;">Requests</span>
             </a>

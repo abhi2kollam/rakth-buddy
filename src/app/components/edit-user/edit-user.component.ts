@@ -14,6 +14,8 @@ import { UserCrudService } from 'src/app/shared/services/user-crud.service';
 export class EditUserComponent implements OnInit {
   editForm: FormGroup | undefined;
   id: string | null = null;
+  currentUser: any = {};
+
   constructor(
     private crudApi: UserCrudService,
     private fb: FormBuilder,
@@ -25,6 +27,8 @@ export class EditUserComponent implements OnInit {
 
   ngOnInit() {
     this.updateUserData();
+    this.currentUser = this.actRoute.parent?.snapshot.data['data'];
+
     this.id = this.actRoute.snapshot.paramMap.get('id') ?? null;
     if (this.id) {
       this.crudApi.get(this.id).subscribe((snapshot: any) => {
@@ -68,7 +72,7 @@ export class EditUserComponent implements OnInit {
       this.toastr.success(
         this.editForm?.controls['displayName'].value + ' updated successfully'
       );
-      this.router.navigate(['home', 'users']);
+      this.router.navigate(['home', this.currentUser.uid, 'users']);
     }
   }
 }
