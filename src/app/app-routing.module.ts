@@ -9,6 +9,9 @@ import { VerifyEmailComponent } from './components/verify-email/verify-email.com
 import { AuthGuard } from './shared/guard/auth.guard';
 import { DonorListComponent } from './components/donor-list/donor-list.component';
 import { EditDonorComponent } from './components/edit-donor/edit-donor.component';
+import { SuperAdminAuthGuard } from './shared/guard/super-admin.guard';
+import { UserListComponent } from './components/user-list/user-list.component';
+import { EditUserComponent } from './components/edit-user/edit-user.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/sign-in', pathMatch: 'full' },
@@ -21,7 +24,13 @@ const routes: Routes = [
     children: [
       { path: 'add', component: EditDonorComponent },
       { path: 'edit/:id', component: EditDonorComponent },
+      { path: 'users/:id', component: EditUserComponent },
       { path: 'list', component: DonorListComponent },
+      {
+        path: 'users',
+        component: UserListComponent,
+        canActivate: [SuperAdminAuthGuard],
+      },
       { path: '', component: DonorListComponent, pathMatch: 'full' },
     ],
   },

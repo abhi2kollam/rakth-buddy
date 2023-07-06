@@ -1,5 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
-import { User } from '../services/user';
+import { User, UserExtended } from '../user';
 import * as auth from 'firebase/auth';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import {
@@ -7,27 +7,32 @@ import {
   AngularFirestoreDocument,
 } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
+import { Observable, switchMap, take } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   userData: any; // Save logged in user data
-
+  userRole = 'guest';
   constructor(
     public afs: AngularFirestore, // Inject Firestore service
     public afAuth: AngularFireAuth, // Inject Firebase auth service
     public router: Router,
     public ngZone: NgZone // NgZone service to remove outside scope warning
   ) {
-    /* Saving user data in localstorage when
-    logged in and setting up null when logged out */
     this.afAuth.authState.subscribe((user) => {
       if (user) {
-        this.userData = user;
+        this.afs
+              .doc<UserExtended>(`users/${user.uid}`)
+              .valueChanges()
+              .subscribe((currentUser) => {
+                this.userRole = currentUser?.role ?? 'guest';
+                this.userData.displayName = currentUser?.displayName;
+              });
+        this.userData = user.toJSON();
         localStorage.setItem('user', JSON.stringify(this.userData));
         JSON.parse(localStorage.getItem('user')!);
-         this.router.navigate(['home','list']);
       } else {
         localStorage.setItem('user', 'null');
         JSON.parse(localStorage.getItem('user')!);
@@ -41,11 +46,11 @@ export class AuthService {
       .signInWithEmailAndPassword(email, password)
       .then((result) => {
         this.setUserData(result.user);
-        // this.afAuth.authState.subscribe((user) => {
-        //   if (user) {
-        //     this.router.navigate(['home']);
-        //   }
-        // });
+        this.afAuth.authState.pipe(take(1)).subscribe((user) => {
+          if (user) {
+            this.router.navigate(['home', 'list']);
+          }
+        });
       })
       .catch((error) => {
         window.alert(error.message);
@@ -53,21 +58,26 @@ export class AuthService {
   }
 
   // Sign up with email/password
-  signUp(email: string, password: string) {
+  signUp(
+    email: string,
+    password: string,
+    displayName: string,
+    phoneNumber: string
+  ) {
     return this.afAuth
       .createUserWithEmailAndPassword(email, password)
       .then((result) => {
-        /* Call the SendVerificaitonMail() function when new user sign
-        up and returns promise */
-        this.sendVerificationMail();
-        this.setUserData(result.user);
+        if (result && result.user) {
+          this.sendVerificationMail();
+          this.setUserData(result.user, { displayName, phoneNumber });
+        }
       })
       .catch((error) => {
         window.alert(error.message);
       });
   }
 
-  // Send email verfificaiton when new user sign up
+  // Send email verification when new user sign up
   sendVerificationMail() {
     return this.afAuth.currentUser
       .then((u: any) => u.sendEmailVerification())
@@ -94,10 +104,31 @@ export class AuthService {
     return user !== null && user.emailVerified !== false ? true : false;
   }
 
+  isAdmin() {
+    const user = JSON.parse(localStorage.getItem('user')!);
+    return (
+      user !== null &&
+      user.emailVerified !== false &&
+      (this.userRole === 'super-admin' || this.userRole === 'admin')
+    );
+  }
+  get isSuperAdmin(): boolean {
+    const user = JSON.parse(localStorage.getItem('user')!);
+    return (
+      user !== null &&
+      user.emailVerified !== false &&
+      this.userRole === 'super-admin'
+    );
+  }
+
   // Sign in with Google
   googleAuth() {
     return this.authLogin(new auth.GoogleAuthProvider()).then((res: any) => {
-      // this.router.navigate(['home']);
+      this.afAuth.authState.pipe(take(1)).subscribe((user) => {
+        if (user) {
+          this.router.navigate(['home', 'list']);
+        }
+      });
     });
   }
 
@@ -106,8 +137,6 @@ export class AuthService {
     return this.afAuth
       .signInWithPopup(provider)
       .then((result) => {
-        // this.router.navigate(['home']);
-
         this.setUserData(result.user);
       })
       .catch((error) => {
@@ -118,17 +147,22 @@ export class AuthService {
   /* Setting up user data when sign in with username/password,
   sign up with username/password and sign in with social auth
   provider in Firestore database using AngularFirestore + AngularFirestoreDocument service */
-  setUserData(user: any) {
+  setUserData(user: any, extra: any = {}) {
     const userRef: AngularFirestoreDocument<any> = this.afs.doc(
       `users/${user.uid}`
     );
-    const userData: User = {
+    const userData: Partial<User> = {
       uid: user.uid,
       email: user.email,
-      displayName: user.displayName,
       photoURL: user.photoURL,
       emailVerified: user.emailVerified,
     };
+    if (user.displayName || extra?.displayName) {
+      userData.displayName = user.displayName ?? extra?.displayName;
+    }
+    if (user.phoneNumber || extra?.phoneNumber) {
+      userData.phoneNumber = user.phoneNumber ?? extra?.phoneNumber;
+    }
     return userRef.set(userData, {
       merge: true,
     });

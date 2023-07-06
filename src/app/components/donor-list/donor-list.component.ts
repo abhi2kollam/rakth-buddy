@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 
-import { CrudService } from '../../shared/crud.service';
+import { CrudService } from '../../shared/services/donor-crud.service';
 import { Donor } from '../../shared/donor';
+import { AuthService } from 'src/app/shared/services/auth.service';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-donor-list',
@@ -16,19 +18,31 @@ export class DonorListComponent implements OnInit {
   noData: boolean = false;
   preLoader: boolean = true;
 
-  constructor(public crudApi: CrudService, public toastr: ToastrService) {}
+  constructor(
+    public authService: AuthService,
+    public crudApi: CrudService,
+    public toastr: ToastrService
+  ) {}
 
   ngOnInit() {
     this.dataState();
     let s = this.crudApi.getDonorsList();
-    s.snapshotChanges().subscribe((data) => {
-      this.donors = [];
-      data.forEach((item) => {
-        let a: any = item.payload.toJSON();
-        a['$key'] = item.key;
-        this.donors.push(a as Donor);
-      });
+    s.snapshotChanges()
+    .pipe(
+      map((changes) =>
+        changes.map((c) => ({
+          id: c.payload.doc.id,
+          ...c.payload.doc.data(),
+        }))
+      )
+    )
+    .subscribe((data) => {
+      this.donors = data;
     });
+  }
+
+  get isAdmin(){
+    return this.authService.isAdmin();
   }
 
   dataState() {
@@ -47,9 +61,9 @@ export class DonorListComponent implements OnInit {
       });
   }
 
-  deleteDonor(donor: Donor) {
+  deleteDonor(donor: any) {
     if (window.confirm('Are sure you want to delete this donor ?')) {
-      this.crudApi.deleteDonor(donor.$key);
+      this.crudApi.deleteDonor(donor.id);
       this.toastr.success(donor.name + ' successfully deleted!');
     }
   }

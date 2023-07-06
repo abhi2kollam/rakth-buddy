@@ -593,12 +593,12 @@ body .table thead th {
   }
 
   .sidebar-sticky {
-    padding-top: 1.9rem !important;
+    padding-top: 0rem !important;
     height: auto;
   }
 
   .sidebar-sticky .nav li {
-    width: 50%;
+    flex:1;
     text-align: center;
     border-right: 1px solid #c7ceff;
   }
@@ -644,7 +644,7 @@ body .table thead th {
   }
 
   .sidebar {
-    padding: 40px 0 0;
+    padding: 0px 0 0;
   }
 
   footer br {

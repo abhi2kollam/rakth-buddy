@@ -1,64 +1,41 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 
-import { CrudService } from '../../shared/crud.service';
+import { CrudService } from '../../shared/services/donor-crud.service';
+import { AuthService } from 'src/app/shared/services/auth.service';
+import { Donor } from 'src/app/shared/donor';
 
 @Component({
   selector: 'app-edit-donor',
   templateUrl: './edit-donor.component.html',
 })
 export class EditDonorComponent implements OnInit {
-  editForm: FormGroup | undefined;
-  id:string|null = null;
+  donor: Partial<Donor> = {};
+  id: string | null = null;
   constructor(
     private crudApi: CrudService,
     private fb: FormBuilder,
     private location: Location,
     private actRoute: ActivatedRoute,
     private router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
-    this.updateDonorData();
     this.id = this.actRoute.snapshot.paramMap.get('id') ?? null;
-    if(this.id){
-      this.crudApi
-        .getDonor(this.id)
-        .valueChanges()
-        .subscribe((data) => {
-          this.editForm?.setValue(data);
-        });
+    if (this.id) {
+      this.crudApi.getDonor(this.id).subscribe((snapshot) => {
+        if (snapshot.exists) {
+          const data = snapshot.data() as Donor;
+          data.district = data.district ?? '';
+          this.donor = data;
+        }
+      });
     }
-  }
-
-  get name() {
-    return this.editForm?.get('name');
-  }
-
-
-  get group() {
-    return this.editForm?.get('group');
-  }
-
-  get mobileNumber() {
-    return this.editForm?.get('mobileNumber');
-  }
-
-  updateDonorData() {
-    this.editForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(2)]],
-      group: [
-        '',
-        [
-          Validators.required,
-        ],
-      ],
-      mobileNumber: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
-    });
   }
 
   goBack() {
@@ -66,21 +43,24 @@ export class EditDonorComponent implements OnInit {
   }
 
   updateForm() {
-    if(this.id){
-      this.crudApi.updateDonor(this.editForm?.value);
-      this.toastr.success(
-        this.editForm?.controls['name'].value + ' updated successfully'
-      );
+    const data = this.donor;
+    const currentTime = new Date().toISOString();
+    if (this.id) {
+      data.updatedBy = this.authService.userData.uid;
+      data.updatedTime = currentTime;
+      this.crudApi.updateDonor(this.id, data);
+      this.toastr.success(this.donor.name + ' updated successfully');
       this.router.navigate(['home', 'list']);
-    }else{
-      this.crudApi.addDonor(this.editForm?.value);
-      this.toastr.success(
-        this.editForm?.controls['name'].value + ' successfully added!'
-      );
+    } else {
+      data.createdBy = this.authService.userData.uid;
+      data.createdTime = currentTime;
+      this.crudApi.addDonor(data);
+      this.toastr.success(this.donor.name + ' successfully added!');
       this.resetForm();
     }
   }
-  resetForm() {
-    this.editForm?.reset();
+  resetForm(form?: NgForm) {
+    form?.resetForm();
+    this.donor = {};
   }
 }

@@ -6,12 +6,12 @@ import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { AngularFireStorageModule } from '@angular/fire/compat/storage';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
-import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { environment } from '../environments/environment';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 // components
 import { HomeComponent } from './components/home/home.component';
@@ -28,7 +28,8 @@ import { AuthService } from './shared/services/auth.service';
 import { EditDonorComponent } from './components/edit-donor/edit-donor.component';
 import { DonorListComponent } from './components/donor-list/donor-list.component';
 import { FilterPipe } from './shared/filter.pipe';
-import { ServiceWorkerModule } from '@angular/service-worker';
+import { UserListComponent } from './components/user-list/user-list.component';
+import { EditUserComponent } from './components/edit-user/edit-user.component';
 
 
 @NgModule({
@@ -41,7 +42,9 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     VerifyEmailComponent,
     EditDonorComponent,
     DonorListComponent,
-    FilterPipe
+    FilterPipe,
+    UserListComponent,
+    EditUserComponent
   ],
   imports: [
     BrowserModule,
@@ -49,7 +52,6 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     AngularFireAuthModule,
     AngularFirestoreModule,
     AngularFireStorageModule,
-    AngularFireDatabaseModule,
     AppRoutingModule,
     NgxPaginationModule,
     ReactiveFormsModule,

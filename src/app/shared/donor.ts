@@ -1,6 +1,10 @@
 export interface Donor {
-  $key: string;
   name: string;
   group: string;
   mobileNumber: number;
+  district: string;
+  createdBy: string;
+  createdTime: string;
+  updatedBy: string;
+  updatedTime: string;
 }

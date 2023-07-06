@@ -9,6 +9,8 @@ import { AuthService } from '../../shared/services/auth.service';
 export class HomeComponent implements OnInit, AfterViewInit {
   showMenu = false;
 
+  showInstallAppOption = false;
+
   @HostListener('window:click', ['$event'])
   onWindowClick(event: any) {
     const targetElement = document.getElementById('dropdown-menu');
@@ -25,7 +27,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if (!window.matchMedia('(display-mode: standalone)').matches) {
+      this.showInstallAppOption = true;
+    }
+  }
 
   logout(event: any) {
     event.stopPropagation();
