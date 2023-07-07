@@ -20,8 +20,7 @@ export class DataResolver implements Resolve<UserExtended | undefined> {
     const id = route.params['id'];
     return new Promise((resolve, reject) => {
       this.afs
-        .collection('/users')
-        .doc<UserExtended>(id)
+        .doc<UserExtended>('/users/'+id)
         .get()
         .subscribe({
           next: (value) => {

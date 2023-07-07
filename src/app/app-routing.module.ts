@@ -29,18 +29,18 @@ const routes: Routes = [
     },
     children: [
       { path: 'add', component: EditDonorComponent },
-      { path: 'edit/:id', component: EditDonorComponent },
+      { path: 'list/:id', component: EditDonorComponent },
       { path: 'users/:id', component: EditUserComponent },
       { path: 'list', component: DonorListComponent },
       {
         path: 'users',
         component: UserListComponent,
-        canActivate: [SuperAdminAuthGuard],
+        // canActivate: [SuperAdminAuthGuard],
       },
       {
         path: 'requests',
         component: RequestListComponent,
-        canActivate: [AdminAuthGuard],
+        // canActivate: [AdminAuthGuard],
       },
       { path: '', component: DonorListComponent, pathMatch: 'full' },
     ],

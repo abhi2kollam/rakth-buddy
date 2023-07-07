@@ -1,13 +1,18 @@
 import { ApplicationRef, Component, OnInit } from '@angular/core';
 import { SwUpdate } from '@angular/service-worker';
 import { concat, first, interval } from 'rxjs';
+import { DialogService } from './shared/services/dialog-service';
 
 @Component({
   selector: 'app-root',
   template: '<router-outlet></router-outlet>',
 })
 export class AppComponent implements OnInit {
-  constructor(private updates: SwUpdate, appRef: ApplicationRef) {
+  constructor(
+    private updates: SwUpdate,
+    appRef: ApplicationRef,
+    private dialogService: DialogService
+  ) {
     updates.versionUpdates.subscribe((evt) => {
       switch (evt.type) {
         case 'VERSION_DETECTED':
@@ -18,9 +23,13 @@ export class AppComponent implements OnInit {
           console.log(
             `New app version ready for use: ${evt.latestVersion.hash}`
           );
-          if (window.confirm('New app version is available. restart ?')) {
-            document.location.reload();
-          }
+          this.dialogService
+            .openConfirmation('New app version is available. restart ?')
+            .then((confirmed: boolean) => {
+              if (confirmed) {
+                document.location.reload();
+              }
+            });
           break;
         case 'VERSION_INSTALLATION_FAILED':
           console.log(

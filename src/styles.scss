@@ -62,7 +62,8 @@ ul.dropdown-menu.show {
   top: 55px;
   right: 0;
 }
-.user-details{
+
+.user-details {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -239,11 +240,13 @@ input:-moz-placeholder {
   color: rgba(255, 255, 255, 0.6);
 
 }
-@media (max-width: 767px){
+
+@media (max-width: 767px) {
   .redirectToLogin {
-    .redirect{
+    .redirect {
       color: rgb(0, 0, 0) !important;
     }
+
     color: rgb(0, 0, 0);
   }
 }
@@ -273,12 +276,6 @@ input:-moz-placeholder {
   overflow-y: auto;
 }
 
-@supports ((position: -webkit-sticky) or (position: sticky)) {
-  .sidebar-sticky {
-    position: -webkit-sticky;
-    position: sticky;
-  }
-}
 
 .sidebar .nav-link {
   font-weight: 500;
@@ -311,7 +308,7 @@ a:not([href]):not([tabindex]):hover {
 
 /* * Content */
 [role="main"] {
-  padding-top: 48px;
+  padding-top: 10px;
 }
 
 .dasboard-text {
@@ -417,7 +414,8 @@ body .ngx-pagination .current {
 .error {
   color: red;
   margin-top: 5px;
-  font-size:.7rem;
+  font-size: .7rem;
+  margin-bottom: 0px;
 }
 
 input.ng-invalid.ng-touched {
@@ -470,7 +468,7 @@ label {
 }
 
 [role="main"] {
-  padding-top: 65px;
+  padding-top: 10px;
 }
 
 .preloader {
@@ -598,7 +596,7 @@ body .table thead th {
   }
 
   .sidebar-sticky .nav li {
-    flex:1;
+    flex: 1;
     text-align: center;
     border-right: 1px solid #c7ceff;
   }
@@ -617,10 +615,13 @@ body .table thead th {
   h2 {
     font-size: 1.4rem;
   }
-  .table-head,.table-cell{
+
+  .table-head,
+  .table-cell {
     display: none !important;
   }
-  .search{
+
+  .search {
     width: 100%;
   }
 
@@ -645,6 +646,8 @@ body .table thead th {
 
   .sidebar {
     padding: 0px 0 0;
+    position:sticky;
+    top:0;
   }
 
   footer br {
@@ -662,9 +665,7 @@ body .table thead th {
   }
 
   b,
-  strong {
-    
-  }
+  strong {}
 
   .displayTable {
     background: white;
@@ -676,5 +677,67 @@ body .table thead th {
 
   .px-logo {
     display: none;
+  }
+}
+
+.font-sm {
+  font-size: .7rem;
+}
+
+dialog {
+  width: 300px;
+  padding: 20px;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+  /* Semi-transparent black */
+}
+
+dialog p {
+  margin: 0 0 10px;
+}
+
+
+dialog button:hover {
+  opacity: 0.8;
+}
+
+.color-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: blue;
+  width: 25px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  text-transform: capitalize;
+
+  .color-text {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(-180deg);
+    color: white;
+  }
+
+  &.pending {
+    background: gray;
+  }
+
+  &.approved {
+    background: green;
+  }
+
+  &.rejected {
+    background: red;
+  }
+
+  &.on-hold {
+    background: orange;
   }
 }

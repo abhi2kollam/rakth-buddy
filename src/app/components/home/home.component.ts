@@ -11,6 +11,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
   showMenu = false;
   currentUser: any = {};
   showInstallAppOption = false;
+  isAdmin = false;
+  isSuperAdmin = false;
 
   @HostListener('window:click', ['$event'])
   onWindowClick(event: any) {
@@ -30,6 +32,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.currentUser = this.route.snapshot.data['data'];
+    this.isSuperAdmin = this.currentUser?.role === 'super-admin';
+    this.isAdmin =
+      this.currentUser?.role === 'super-admin' ||
+      this.currentUser?.role === 'admin';
     this.authService.setCurrentUserInfo(this.currentUser);
     if (!window.matchMedia('(display-mode: standalone)').matches) {
       this.showInstallAppOption = true;

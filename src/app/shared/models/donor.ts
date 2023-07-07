@@ -8,4 +8,5 @@ export interface Donor {
   createdTime: string;
   updatedBy: string;
   updatedTime: string;
+  lastDonated: string;
 }

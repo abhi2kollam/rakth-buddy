@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { combineLatest, map } from 'rxjs';
 
 import { CrudService } from 'src/app/shared/services/donor-crud.service';
-
 import { RequestCrudService } from 'src/app/shared/services/request-crud.service';
 import { UserCrudService } from 'src/app/shared/services/user-crud.service';
-import { Request, RequestStatus } from 'src/app/shared/models/request';
+import { Request } from 'src/app/shared/models/request';
+import { DialogService } from 'src/app/shared/services/dialog-service';
 @Component({
   selector: 'app-user-list',
   templateUrl: './request-list.component.html',
@@ -15,9 +15,12 @@ export class RequestListComponent implements OnInit {
   p: number = 1;
   searchText = '';
   requests: Request[] = [];
+  request: Partial<Request> = {};
+  @ViewChild('myDialog') myDialog: ElementRef | undefined;
 
   constructor(
     public requestApi: RequestCrudService,
+    private dialogService: DialogService,
     public userApi: UserCrudService,
     public donorApi: CrudService,
     public toastr: ToastrService
@@ -53,13 +56,34 @@ export class RequestListComponent implements OnInit {
       this.requests = requestList;
     });
   }
-  async onDropdownChange(request: any) {
+  async saveStatus() {
     const data: any = {
-      status: request.status,
+      status: this.request.status,
+      remarks: this.request.remarks,
       updatedTime: new Date().toISOString(),
     };
-    await this.requestApi.update(request.id, data);
+    await this.requestApi.update((this.request as any).id, data);
+    this.closeDialog()
 
     this.toastr.success('Request updated successfully');
+  }
+
+  deleteRequest(request: any) {
+    this.dialogService
+      .openConfirmation('Are sure you want to delete this donor ')
+      .then((confirmed: boolean) => {
+        if (confirmed) {
+          this.requestApi.delete(request.id);
+          this.toastr.success('request successfully deleted!');
+        }
+      });
+  }
+  openDialog(request: Partial<Request>) {
+    this.request = request;
+    this.myDialog?.nativeElement.showModal();
+  }
+
+  closeDialog() {
+    this.myDialog?.nativeElement.close();
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
@@ -16,10 +16,11 @@ export class EditDonorComponent implements OnInit {
   donor: Partial<Donor> = {};
   id: string | null = null;
   currentUser: any = {};
+  maxDate: string = '';
+  @ViewChild('editForm') editForm: NgForm | undefined;
 
   constructor(
     private crudApi: CrudService,
-    private fb: FormBuilder,
     private location: Location,
     private actRoute: ActivatedRoute,
     private router: Router,
@@ -29,6 +30,8 @@ export class EditDonorComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    const today = new Date();
+    this.maxDate = today.toISOString().split('T')[0];
     this.currentUser = this.route.parent?.snapshot.data['data'];
 
     this.id = this.actRoute.snapshot.paramMap.get('id') ?? null;
@@ -61,7 +64,7 @@ export class EditDonorComponent implements OnInit {
       data.createdTime = currentTime;
       this.crudApi.addDonor(data);
       this.toastr.success(this.donor.name + ' successfully added!');
-      this.resetForm();
+      this.resetForm(this.editForm);
     }
   }
   resetForm(form?: NgForm) {

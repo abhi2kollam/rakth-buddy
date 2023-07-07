@@ -8,6 +8,8 @@ import { AuthService } from 'src/app/shared/services/auth.service';
 import { RequestCrudService } from 'src/app/shared/services/request-crud.service';
 import { RequestStatus } from 'src/app/shared/models/request';
 import { ActivatedRoute } from '@angular/router';
+import { UserCrudService } from 'src/app/shared/services/user-crud.service';
+import { DialogService } from 'src/app/shared/services/dialog-service';
 
 @Component({
   selector: 'app-donor-list',
@@ -20,25 +22,31 @@ export class DonorListComponent implements OnInit {
   hideWhenNoDonor: boolean = false;
   noData: boolean = false;
   preLoader: boolean = true;
+  isAdmin = false;
   currentUser: any = {};
   constructor(
     public authService: AuthService,
     public crudApi: CrudService,
     public requestApi: RequestCrudService,
     public toastr: ToastrService,
-    public route: ActivatedRoute
+    public route: ActivatedRoute,
+    private dialogService: DialogService
   ) {}
 
   ngOnInit() {
     this.currentUser = this.route.parent?.snapshot.data['data'];
+    this.isAdmin =
+      this.currentUser.role === 'admin' ||
+      this.currentUser.role === 'super-admin';
     this.dataState();
-    if (this.authService.isAdmin()) {
+    if (this.isAdmin) {
       let s = this.crudApi.getDonorsList();
       s.snapshotChanges()
         .pipe(
           map((changes) =>
             changes.map((c) => ({
               ...c.payload.doc.data(),
+              color: this.defineColor(c.payload.doc.data().lastDonated),
               id: c.payload.doc.id,
             }))
           )
@@ -58,10 +66,15 @@ export class DonorListComponent implements OnInit {
               request.data().donorId === donor.id &&
               request.data().requesterId === this.authService.userData?.uid
           );
+          const isSameCreator =
+            donor.data().createdBy === this.authService.userData?.uid;
           donorList.push({
             ...donor.data(),
+            color: this.defineColor(donor.data().lastDonated),
             id: donor.id,
+            isSameCreator,
             status: requestData[0]?.data()?.status,
+            remarks: requestData[0]?.data()?.remarks,
           });
         });
 
@@ -70,8 +83,15 @@ export class DonorListComponent implements OnInit {
     }
   }
 
-  get isAdmin() {
-    return this.authService.isAdmin();
+  defineColor(lastDonated: string) {
+    if (!lastDonated) {
+      return 'green';
+    }
+    const currentDate = new Date();
+    const threeMonthsAgo = new Date();
+    threeMonthsAgo.setMonth(currentDate.getMonth() - 3);
+
+    return new Date(lastDonated) > threeMonthsAgo ? 'red' : 'green';
   }
 
   dataState() {
@@ -89,12 +109,28 @@ export class DonorListComponent implements OnInit {
         }
       });
   }
+  copyContact(donor: any) {
+    navigator.clipboard
+      .writeText(donor.mobileNumber)
+      .then(() => {
+        this.toastr.success('Mobile number copied to clipboard');
+        // You can also display a success message to the user
+      })
+      .catch((error) => {
+        console.error('Error copying mobile number:', error);
+        // You can display an error message to the user if copying failed
+      });
+  }
 
   deleteDonor(donor: any) {
-    if (window.confirm('Are sure you want to delete this donor ?')) {
-      this.crudApi.deleteDonor(donor.id);
-      this.toastr.success(donor.name + ' successfully deleted!');
-    }
+    this.dialogService
+      .openConfirmation('Are sure you want to delete this donor ')
+      .then((confirmed: boolean) => {
+        if (confirmed) {
+          this.crudApi.deleteDonor(donor.id);
+          this.toastr.success(donor.name + ' successfully deleted!');
+        }
+      });
   }
   requestContact(event: any, donor: Donor) {
     event.stopPropagation();

@@ -32,6 +32,8 @@ import { UserListComponent } from './components/user-list/user-list.component';
 import { EditUserComponent } from './components/edit-user/edit-user.component';
 import { RequestListComponent } from './components/request-list/request-list.component';
 import { DataResolver } from './shared/guard/data-resolver';
+import { TimeAgoPipe } from './shared/time-ago.pipe';
+import { DialogService } from './shared/services/dialog-service';
 
 @NgModule({
   declarations: [
@@ -44,6 +46,7 @@ import { DataResolver } from './shared/guard/data-resolver';
     EditDonorComponent,
     DonorListComponent,
     FilterPipe,
+    TimeAgoPipe,
     UserListComponent,
     EditUserComponent,
     RequestListComponent,
@@ -67,7 +70,7 @@ import { DataResolver } from './shared/guard/data-resolver';
       registrationStrategy: 'registerWhenStable:30000',
     }),
   ],
-  providers: [AuthService, DataResolver],
+  providers: [AuthService, DataResolver, DialogService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
