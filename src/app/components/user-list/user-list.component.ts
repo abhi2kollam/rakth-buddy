@@ -41,7 +41,7 @@ export class UserListComponent implements OnInit {
           list[index].role = list[index].role ?? 'guest';
         });
 
-        this.users = data.filter((doc: any) => doc.role !== 'super-admin');
+        this.users = data.filter((doc: any) => doc.id !== this.currentUser.uid);
       });
   }
 }

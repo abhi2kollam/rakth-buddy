@@ -46,7 +46,7 @@ export class DonorListComponent implements OnInit {
           map((changes) =>
             changes.map((c) => ({
               ...c.payload.doc.data(),
-              color: this.defineColor(c.payload.doc.data().lastDonated),
+              availableStatus: this.defineColor(c.payload.doc.data().lastDonated),
               id: c.payload.doc.id,
             }))
           )
@@ -70,7 +70,7 @@ export class DonorListComponent implements OnInit {
             donor.data().createdBy === this.authService.userData?.uid;
           donorList.push({
             ...donor.data(),
-            color: this.defineColor(donor.data().lastDonated),
+            availableStatus: this.defineColor(donor.data().lastDonated),
             id: donor.id,
             isSameCreator,
             status: requestData[0]?.data()?.status,
@@ -85,13 +85,13 @@ export class DonorListComponent implements OnInit {
 
   defineColor(lastDonated: string) {
     if (!lastDonated) {
-      return 'green';
+      return 'available';
     }
     const currentDate = new Date();
     const threeMonthsAgo = new Date();
     threeMonthsAgo.setMonth(currentDate.getMonth() - 3);
 
-    return new Date(lastDonated) > threeMonthsAgo ? 'red' : 'green';
+    return new Date(lastDonated) > threeMonthsAgo ? 'unavailable' : 'available';
   }
 
   dataState() {

@@ -122,9 +122,13 @@ export class AuthService {
   // Sign in with Google
   googleAuth() {
     return this.authLogin(new auth.GoogleAuthProvider()).then((res: any) => {
+      console.log("before authState",new Date());
+
       this.afAuth.authState.pipe(take(1)).subscribe((user) => {
         if (user) {
-          this.router.navigate(['home', user.uid,'list']);
+          console.log("before route navigate",new Date());
+
+          this.router.navigate(['home', user.uid, 'list']);
         }
       });
     });
@@ -135,6 +139,7 @@ export class AuthService {
     return this.afAuth
       .signInWithPopup(provider)
       .then((result) => {
+        console.log("before setuser",new Date());
         this.setUserData(result.user);
       })
       .catch((error) => {
@@ -161,9 +166,24 @@ export class AuthService {
     if (user.phoneNumber || extra?.phoneNumber) {
       userData.phoneNumber = user.phoneNumber ?? extra?.phoneNumber;
     }
-    return userRef.set(userData, {
-      merge: true,
+    return new Promise((resolve, reject) => {
+      userRef.get().subscribe(
+        (snapshot) => {
+          if (snapshot.exists) {
+            userRef.update(userData);
+          } else {
+            userRef.set(userData);
+          }
+          resolve(void 0);
+        },
+        () => {
+          reject();
+        }
+      );
     });
+    // return userRef.set(userData, {
+    //   merge: true,
+    // });
   }
 
   // Sign out

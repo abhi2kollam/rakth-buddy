@@ -23,9 +23,9 @@
           ">
           <td class="p-0 position-relative">
             <div class="color-bar" [class]="request.status">
-              <span class="color-text">{{request.status}}</span>
+              <span class="color-text font-sm">{{request.status}}</span>
             </div>
-            <div class=" p-2 d-flex justify-content-between align-items-center" style="margin-left: 25px;">
+            <div class=" p-2 d-flex justify-content-between align-items-center" style="margin-left: 20px;">
               <div class="row align-items-end flex-grow-1">
                 <span class="col-md-6 text-break font-sm">
                   <strong class="fs-6">{{ request.requesterName }}</strong>({{request.requesterEmail}}) has requested
@@ -33,7 +33,7 @@
                   <strong class="fs-6">
                     {{request.donorName}}</strong> (Dist:{{request.donorDistrict}})
                 </span>
-                <span class="col-md-6 d-flex justify-content-evenly mt-2">
+                <span class="col-md-6 d-flex justify-content-around mt-2">
                   <span class="btn btn-outline-success btn-sm me-2 mb-md-2">
                     <a style="text-decoration: none;" href="tel:{{request.donorMobile}}"><em
                         class="fas fa-phone fa-rotate-90"></em> Donor

@@ -25,11 +25,14 @@
               | paginate: { itemsPerPage: 10, currentPage: p };
             let i = index
           ">
-          <td class="p-0">
-            <div class=" p-2 d-flex justify-content-between align-items-center" style="cursor: pointer;"
+          <td class="p-0 position-relative">
+            <div class="color-bar" [class]="donor.availableStatus">
+              <span class="color-text font-sm">{{donor.availableStatus}}</span>
+            </div>
+            <div class="p-2 ps-0 d-flex justify-content-between align-items-center" style="cursor: pointer;margin-left:20px"
               (click)="donor.opened = !donor.opened ">
               <div class="row align-items-end flex-grow-1 mx-0">
-                <span class="col-md-6 px-0" [ngStyle]="{'color':donor.color}">
+                <span class="col-md-6 px-0">
                   <i class="fas fa-caret-right m-0" *ngIf="!donor.opened"></i>
                   <i class="fas fa-caret-down m-0" *ngIf="donor.opened"></i>
                   {{ donor.name }}
@@ -45,10 +48,10 @@
             </div>
             <div *ngIf="donor.opened" class="bg-info-subtle">
               <div *ngIf="isAdmin || donor.isSameCreator" class="action-block d-flex justify-content-evenly py-2">
-                <span class=" me-2 btn btn-outline-success btn-sm" title="Copy Contact">
+                <span class=" me-2 btn btn-outline-success btn-sm" title="Call">
                   <a href="tel:{{donor.mobileNumber}}"><em class="fas fa-phone fa-rotate-90"></em></a>
                 </span>
-                <span class=" me-2 btn btn-outline-primary btn-sm" (click)="copyContact(donor)" title="Share">
+                <span class=" me-2 btn btn-outline-primary btn-sm" (click)="copyContact(donor)" title="Copy Contact">
                   <em class="far fa-copy"></em>
                 </span>
                 <span class="me-2 btn btn-outline-primary btn-sm" title="Edit"

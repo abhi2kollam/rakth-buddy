@@ -712,7 +712,7 @@ dialog button:hover {
   top: 0;
   left: 0;
   background: blue;
-  width: 25px;
+  width: 20px;
   height: 100%;
   display: flex;
   align-items: center;
@@ -729,11 +729,11 @@ dialog button:hover {
     background: gray;
   }
 
-  &.approved {
+  &.approved,&.available {
     background: green;
   }
 
-  &.rejected {
+  &.rejected,&.unavailable {
     background: red;
   }
 
