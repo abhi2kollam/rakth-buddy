@@ -684,6 +684,9 @@ body .table thead th {
 .font-sm {
   font-size: .7rem;
 }
+.font-sm-1 {
+  font-size: .6rem;
+}
 
 @keyframes dialogAnimation {
   from {
@@ -730,7 +733,6 @@ dialog button:hover {
     margin-top: 11px !important;
   }
 }
-
 .color-bar {
   position: absolute;
   top: 0;
@@ -738,9 +740,9 @@ dialog button:hover {
   background: blue;
   width: 20px;
   height: 100%;
-  display: flex;
-  align-items: center;
   text-transform: capitalize;
+  overflow: hidden;
+  text-align: center;
 
   .color-text {
     writing-mode: vertical-rl;
@@ -748,6 +750,7 @@ dialog button:hover {
     transform: rotate(-180deg);
     color: white;
     user-select: none;
+    height: 100%;
   }
 
   &.pending {
@@ -755,15 +758,20 @@ dialog button:hover {
   }
 
   &.approved,
+  &.guest,
   &.available {
     background: green;
   }
 
   &.rejected,
+  &.super-admin,
   &.unavailable {
     background: red;
   }
 
+  &.admin {
+    background: blue;
+  }
   &.on-hold {
     background: orange;
   }

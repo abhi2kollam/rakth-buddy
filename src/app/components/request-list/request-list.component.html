@@ -1,23 +1,23 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
-  <div class="btn-group w-100 font-sm" role="group" aria-label="Basic checkbox toggle button group">
+  <div class="btn-group w-100" role="group" aria-label="Basic checkbox toggle button group">
     <input type="checkbox" [checked]="selectedItems.includes('pending')" class="btn-check" id="btncheck1"
       (change)="onStatusFilter('pending',$event)" autocomplete="off">
-    <label class="btn btn-outline-primary font-sm d-flex align-items-center justify-content-center" for="btncheck1">
+    <label class="btn btn-outline-primary font-sm-1 d-flex align-items-center justify-content-center" for="btncheck1">
       <span class="tick fas fa-check me-1"></span> Pending</label>
 
     <input type="checkbox" [checked]="selectedItems.includes('on-hold')" class="btn-check"
       (change)="onStatusFilter('on-hold',$event)" id="btncheck2" autocomplete="off">
-    <label class="btn btn-outline-primary font-sm d-flex align-items-center justify-content-center" for="btncheck2">
+    <label class="btn btn-outline-primary font-sm-1 d-flex align-items-center justify-content-center" for="btncheck2">
       <span class="tick fas fa-check me-1"></span> On-Hold</label>
 
     <input type="checkbox" [checked]="selectedItems.includes('approved')" class="btn-check"
       (change)="onStatusFilter('approved',$event)" id="btncheck3" autocomplete="off">
-    <label class="btn btn-outline-primary font-sm d-flex align-items-center justify-content-center" for="btncheck3">
+    <label class="btn btn-outline-primary font-sm-1 d-flex align-items-center justify-content-center" for="btncheck3">
       <span class="tick fas fa-check me-1"></span>Approved</label>
 
     <input type="checkbox" [checked]="selectedItems.includes('rejected')" class="btn-check" id="btncheck4"
       (change)="onStatusFilter('rejected',$event)" autocomplete="off">
-    <label class="btn btn-outline-primary font-sm d-flex align-items-center justify-content-center" for="btncheck4">
+    <label class="btn btn-outline-primary font-sm-1 d-flex align-items-center justify-content-center" for="btncheck4">
       <span class="tick fas fa-check me-1"></span> Rejected</label>
   </div>
   <!-- <input type="text" class="search" [(ngModel)]="searchText" placeholder="Search"> -->
@@ -28,7 +28,7 @@
 </div>
 
 <div class="pricing-header mx-auto">
-  <div class="table-responsive table-custom">
+  <div class=" table-custom">
     <div class="table-row" *ngFor="
             let request of requests
               | requestFilter: selectedItems

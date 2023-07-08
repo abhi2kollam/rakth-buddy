@@ -11,14 +11,14 @@
     <a routerLink="/home/{{currentUser?.uid}}/add" class="btn btn-success"> Add Donor </a>
   </div>
 
-  <div class="table-responsive table-custom" *ngIf="hideWhenNoDonor">
+  <div class="table-custom" *ngIf="hideWhenNoDonor">
       <div class="table-row" *ngFor="
             let donor of donors
               | filter: searchText
               | paginate: { itemsPerPage: 6, currentPage: p };
             let i = index
           ">
-        <td class="p-0 position-relative">
+        <div class="p-0 position-relative">
           <div class="color-bar" [class]="donor.availableStatus">
             <span class="color-text font-sm">{{donor.availableStatus}}</span>
           </div>
@@ -69,7 +69,7 @@
               </span>
             </div>
           </div>
-        </td>
+        </div>
       </div>
   </div>
 
