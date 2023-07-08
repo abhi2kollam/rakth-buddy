@@ -81,6 +81,17 @@ export class EditDonorComponent implements OnInit {
   }
 
   updateForm() {
+    if(this.donor.lastDonated){
+      const currentDate = new Date();
+      const selectedDate = new Date(this.donor.lastDonated);
+
+      // Check if the future date is greater than the current date
+      if (selectedDate.getTime() > currentDate.getTime()) {
+        this.toastr.warning('Unable to save.The last donated date is in the future.');
+        return;
+      }
+    }
+
     if (this.donor.location && !this.locations.includes(this.donor.location)) {
       const dist = this.districts.find((d) => d.name === this.donor.district);
       if (dist?.id) {

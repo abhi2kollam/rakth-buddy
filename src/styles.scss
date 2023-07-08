@@ -646,8 +646,8 @@ body .table thead th {
 
   .sidebar {
     padding: 0px 0 0;
-    position:sticky;
-    top:0;
+    position: sticky;
+    top: 0;
   }
 
   footer br {
@@ -685,8 +685,15 @@ body .table thead th {
 }
 
 @keyframes dialogAnimation {
-  from { opacity: 0; transform: translateY(-50px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 dialog {
@@ -716,6 +723,13 @@ dialog button:hover {
   opacity: 0.8;
 }
 
+@media (max-width: 767px) {
+  .full-width-toastr {
+    width: 90% !important;
+    margin-top: 11px !important;
+  }
+}
+
 .color-bar {
   position: absolute;
   top: 0;
@@ -739,11 +753,13 @@ dialog button:hover {
     background: gray;
   }
 
-  &.approved,&.available {
+  &.approved,
+  &.available {
     background: green;
   }
 
-  &.rejected,&.unavailable {
+  &.rejected,
+  &.unavailable {
     background: red;
   }
 

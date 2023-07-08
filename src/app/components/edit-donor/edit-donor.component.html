@@ -50,9 +50,9 @@
               </div>
 
               <div class="col-md-12 mb-2">
-                <label>Mobile number</label>
+                <label>Mobile number <span class="font-sm"> (with out country code)</span></label>
                 <input type="tel" name="mobileNumber" [(ngModel)]="donor.mobileNumber" #mobileNumber="ngModel"
-                  pattern="[0-9]{10}" class="form-control" required />
+                  pattern="[0-9]{10}" class="form-control" required maxlength="10" />
 
                 <p *ngIf="mobileNumber?.touched && mobileNumber?.errors?.['required']" class="error">
                   <sup>*</sup>Please provide contact number

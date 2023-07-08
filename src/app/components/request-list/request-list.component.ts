@@ -55,7 +55,27 @@ export class RequestListComponent implements OnInit {
           donorDistrict: donorData?.district,
         });
       });
-
+      const order: any = {
+        pending: 0,
+        'on-hold': 1,
+        approved: 2,
+        rejected: 3,
+      };
+      const sortByDate = (a: any, b: any) => {
+        const statusA = order[a.status];
+        const statusB = order[b.status];
+        const dateA = new Date(a.updatedTime).getTime();
+        const dateB = new Date(b.updatedTime).getTime();
+        if (statusA < statusB) {
+          return -1;
+        } else if (statusA > statusB) {
+          return 1;
+        } else {
+          return a.createdDate - b.createdDate;
+        }
+        return dateA - dateB;
+      };
+      requestList.sort(sortByDate);
       this.requests = requestList;
     });
   }
@@ -72,12 +92,12 @@ export class RequestListComponent implements OnInit {
 
   deleteRequest(request: any) {
     this.dialogService
-    .openConfirmation('Are sure you want to delete this request ')
-    .then((confirmed: boolean) => {
-      if (confirmed) {
-        this.requestApi.delete(request.id);
-        this.toastr.success('request successfully deleted!');
-        this.loadList();
+      .openConfirmation('Are sure you want to delete this request ')
+      .then((confirmed: boolean) => {
+        if (confirmed) {
+          this.requestApi.delete(request.id);
+          this.toastr.success('request successfully deleted!');
+          this.loadList();
         }
       });
   }
