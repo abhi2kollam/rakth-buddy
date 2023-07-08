@@ -1,5 +1,6 @@
 @import "https://use.fontawesome.com/releases/v5.5.0/css/all.css";
 
+
 * {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -766,4 +767,27 @@ dialog button:hover {
   &.on-hold {
     background: orange;
   }
+}
+
+.tick {
+  visibility: hidden;
+}
+
+.btn-check:checked+.btn .tick {
+  visibility: visible;
+}
+
+
+.btn-check+.btn {
+  border: 1px solid #000 !important;
+}
+
+.table-custom {
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  border-radius: 5px;
+
+  .table-row {
+    border-bottom: 1px solid #dde0e2;
+  }
+
 }

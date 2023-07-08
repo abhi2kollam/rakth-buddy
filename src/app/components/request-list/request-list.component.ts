@@ -17,6 +17,7 @@ export class RequestListComponent implements OnInit {
   requests: Request[] = [];
   request: Partial<Request> = {};
   @ViewChild('myDialog') myDialog: ElementRef | undefined;
+  selectedItems = ['pending', 'on-hold', 'approved', 'rejected'];
 
   constructor(
     public requestApi: RequestCrudService,
@@ -29,6 +30,16 @@ export class RequestListComponent implements OnInit {
   async ngOnInit() {
     this.loadList();
   }
+  onStatusFilter(status: string, event: Event) {
+    if ((event?.target as any)?.checked) {
+      this.selectedItems.push(status);
+    } else {
+      const index = this.selectedItems.findIndex((s) => s === status);
+      this.selectedItems.splice(index, 1);
+    }
+    this.selectedItems = [...this.selectedItems];
+  }
+
   loadList() {
     combineLatest([
       this.donorApi.getDonorsList().get(),
@@ -70,8 +81,6 @@ export class RequestListComponent implements OnInit {
           return -1;
         } else if (statusA > statusB) {
           return 1;
-        } else {
-          return a.createdDate - b.createdDate;
         }
         return dateA - dateB;
       };

@@ -27,13 +27,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AuthService } from './shared/services/auth.service';
 import { EditDonorComponent } from './components/edit-donor/edit-donor.component';
 import { DonorListComponent } from './components/donor-list/donor-list.component';
-import { FilterPipe } from './shared/filter.pipe';
+import { FilterPipe } from './shared/pipes/filter.pipe';
 import { UserListComponent } from './components/user-list/user-list.component';
 import { EditUserComponent } from './components/edit-user/edit-user.component';
 import { RequestListComponent } from './components/request-list/request-list.component';
 import { DataResolver } from './shared/guard/data-resolver';
-import { TimeAgoPipe } from './shared/time-ago.pipe';
+import { TimeAgoPipe } from './shared/pipes/time-ago.pipe';
 import { DialogService } from './shared/services/dialog-service';
+import { RequestFilterPipe } from './shared/pipes/request-filter.pipe';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import { DialogService } from './shared/services/dialog-service';
     EditDonorComponent,
     DonorListComponent,
     FilterPipe,
+    RequestFilterPipe,
     TimeAgoPipe,
     UserListComponent,
     EditUserComponent,

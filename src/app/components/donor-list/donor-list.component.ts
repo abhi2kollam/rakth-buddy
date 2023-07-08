@@ -34,6 +34,22 @@ export class DonorListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    const order: any = {
+      available: 0,
+      unavailable: 1,
+    };
+    const sortByDate = (a: any, b: any) => {
+      const statusA = order[a.availableStatus];
+      const statusB = order[b.availableStatus];
+      const dateA = new Date(a.updatedTime).getTime();
+      const dateB = new Date(b.updatedTime).getTime();
+      if (statusA < statusB) {
+        return -1;
+      } else if (statusA > statusB) {
+        return 1;
+      }
+      return dateA - dateB;
+    };
     this.currentUser = this.route.parent?.snapshot.data['data'];
     this.isAdmin =
       this.currentUser.role === 'admin' ||
@@ -46,13 +62,16 @@ export class DonorListComponent implements OnInit {
           map((changes) =>
             changes.map((c) => ({
               ...c.payload.doc.data(),
-              availableStatus: this.defineColor(c.payload.doc.data().lastDonated),
+              availableStatus: this.defineColor(
+                c.payload.doc.data().lastDonated
+              ),
               id: c.payload.doc.id,
             }))
           )
         )
-        .subscribe((data) => {
-          this.donors = data;
+        .subscribe((donorList) => {
+          donorList.sort(sortByDate);
+          this.donors = donorList;
         });
     } else {
       combineLatest([
@@ -77,6 +96,8 @@ export class DonorListComponent implements OnInit {
             remarks: requestData[0]?.data()?.remarks,
           });
         });
+
+        donorList.sort(sortByDate);
 
         this.donors = donorList;
       });
@@ -112,8 +133,7 @@ export class DonorListComponent implements OnInit {
   copyContact(donor: any) {
     navigator.clipboard
       .writeText(donor.mobileNumber)
-      .then(() => {
-      })
+      .then(() => {})
       .catch((error) => {
         console.error('Error copying mobile number:', error);
         // You can display an error message to the user if copying failed

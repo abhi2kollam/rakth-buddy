@@ -9,7 +9,7 @@ import { AuthService } from 'src/app/shared/services/auth.service';
 import { Donor } from 'src/app/shared/models/donor';
 import { DistrictCrudService } from 'src/app/shared/services/district-crud.service';
 import { District } from 'src/app/shared/models/district';
-import { map } from 'rxjs';
+import { map, take } from 'rxjs';
 
 @Component({
   selector: 'app-edit-donor',
@@ -57,6 +57,7 @@ export class EditDonorComponent implements OnInit {
     this.districtApi
       .getAll()
       .snapshotChanges()
+
       .pipe(
         map((changes) =>
           changes.map((c) => ({
@@ -65,6 +66,7 @@ export class EditDonorComponent implements OnInit {
           }))
         )
       )
+      .pipe(take(1))
       .subscribe((districts) => {
         if (districts) {
           this.districts = districts;
@@ -81,13 +83,15 @@ export class EditDonorComponent implements OnInit {
   }
 
   updateForm() {
-    if(this.donor.lastDonated){
+    if (this.donor.lastDonated) {
       const currentDate = new Date();
       const selectedDate = new Date(this.donor.lastDonated);
 
       // Check if the future date is greater than the current date
       if (selectedDate.getTime() > currentDate.getTime()) {
-        this.toastr.warning('Unable to save.The last donated date is in the future.');
+        this.toastr.warning(
+          'Unable to save.The last donated date is in the future.'
+        );
         return;
       }
     }
