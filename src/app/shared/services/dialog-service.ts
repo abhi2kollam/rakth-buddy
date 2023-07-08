@@ -13,9 +13,12 @@ export class DialogService {
 
   openConfirmation(message: string, buttons?: string[]): Promise<boolean> {
     this.dialogElement.innerHTML = `
+      <h2>Confirmation</h2>
       <p>${message}</p>
-      <button class="confirm-button btn btn-primary">Confirm</button>
-      <button class="cancel-button btn btn-secondary">Cancel</button>
+      <div class="mt-3 d-flex justify-content-evenly">
+        <button class="confirm-button btn btn-primary">Confirm</button>
+        <button class="cancel-button btn btn-secondary">Cancel</button>
+      </div>
     `;
 
     this.dialogElement.showModal();

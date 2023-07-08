@@ -1,9 +1,9 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
   <h1 class="h2">{{this.id ? 'Edit':'Add'}} Donor Details</h1>
-  <div class="btn-toolbar mb-2 mb-md-0" *ngIf="this.id">
+  <div class="btn-toolbar mb-2 mb-md-0">
     <div class="btn-group">
       <button class="btn btn-sm btn-outline-secondary" (click)="goBack()">
-        Go Back
+        Goto list
       </button>
     </div>
   </div>
@@ -16,10 +16,10 @@
         <div class="row">
           <div class="col-lg-5 col-md-12 col-sm-12">
             <div class="row">
-              <div class="col-md-12 mb-3">
+              <div class="col-md-12 mb-2">
                 <label>Name</label>
-                <input type="text" minlength="2" #name="ngModel" [(ngModel)]="donor.name" name="name" class="form-control"
-                  required />
+                <input type="text" minlength="2" #name="ngModel" [(ngModel)]="donor.name" name="name"
+                  class="form-control" required />
 
                 <p *ngIf="name?.touched && name?.errors?.['required']" class="error">
                   <sup>*</sup>Please enter name
@@ -31,7 +31,7 @@
             </div>
 
             <div class="row">
-              <div class="col-md-12 mb-3">
+              <div class="col-md-12 mb-2">
                 <label>Blood Group</label>
                 <select [(ngModel)]="donor.group" name="group" #group="ngModel" class="form-control" required>
                   <option value="A+">A+</option>
@@ -49,10 +49,10 @@
                 </p>
               </div>
 
-              <div class="col-md-12 mb-3">
+              <div class="col-md-12 mb-2">
                 <label>Mobile number</label>
-                <input type="tel" name="mobileNumber" [(ngModel)]="donor.mobileNumber" #mobileNumber="ngModel" pattern="[0-9]{10}"
-                  class="form-control" required />
+                <input type="tel" name="mobileNumber" [(ngModel)]="donor.mobileNumber" #mobileNumber="ngModel"
+                  pattern="[0-9]{10}" class="form-control" required />
 
                 <p *ngIf="mobileNumber?.touched && mobileNumber?.errors?.['required']" class="error">
                   <sup>*</sup>Please provide contact number
@@ -61,40 +61,35 @@
                   <sup>*</sup>Mobile Number is invalid
                 </p>
               </div>
-              <div class="col-md-12 mb-3">
+              <div class="col-md-12 mb-2">
                 <label>District</label>
                 <select name="district" [(ngModel)]="donor.district" #district="ngModel" class="form-control"
-                  id="district">
-                  <option value="Thiruvananthapuram">Thiruvananthapuram</option>
-                  <option value="Kollam">Kollam</option>
-                  <option value="Pathanamthitta">Pathanamthitta</option>
-                  <option value="Alappuzha">Alappuzha</option>
-                  <option value="Kottayam">Kottayam</option>
-                  <option value="Idukki">Idukki</option>
-                  <option value="Ernakulam">Ernakulam</option>
-                  <option value="Thrissur">Thrissur</option>
-                  <option value="Palakkad">Palakkad</option>
-                  <option value="Malappuram">Malappuram</option>
-                  <option value="Kozhikode">Kozhikode</option>
-                  <option value="Wayanad">Wayanad</option>
-                  <option value="Kannur">Kannur</option>
-                  <option value="Kasaragod">Kasaragod</option>
+                  id="district" (change)="onSelectDistrict(donor.district)">
+                  <option *ngFor="let dist of districts" [value]="dist.name">{{dist.name}}</option>
                 </select>
 
                 <p *ngIf="district?.touched && district?.invalid" class="error">
                   <sup>*</sup>Please provide district
                 </p>
               </div>
-              <div class="col-md-12 mb-3">
+              <div class="col-md-12 mb-2" *ngIf="donor.district">
+                <label>Location</label>
+                <input list="locations" type="text" name="location" [(ngModel)]="donor.location" #location="ngModel"
+                  class="form-control" />
+                <datalist id="locations">
+                  <option *ngFor="let loc of locations" [value]="loc">
+                </datalist>
+              </div>
+              <div class="col-md-12 mb-2">
                 <label>Last donated date</label>
-                <input type="date" [max]="maxDate" name="lastDonated" [(ngModel)]="donor.lastDonated" #lastDonated="ngModel"
-                  class="form-control">
+                <input type="date" [max]="maxDate" name="lastDonated" [(ngModel)]="donor.lastDonated"
+                  #lastDonated="ngModel" class="form-control">
                 <p *ngIf="lastDonated?.touched && lastDonated?.invalid" class="error">
                   <sup>*</sup> Selected date cannot be invalid/ in the future.
                 </p>
               </div>
             </div>
-            <div class="form-group text-right" *ngIf="id">
+            <div class="form-group text-right mt-2" *ngIf="id">
               <button type="submit" class="btn btn-success btn-block" [disabled]="!editForm?.valid">
                 Update Donor
               </button>

@@ -684,8 +684,17 @@ body .table thead th {
   font-size: .7rem;
 }
 
+@keyframes dialogAnimation {
+  from { opacity: 0; transform: translateY(-50px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 dialog {
-  width: 300px;
+  animation: dialogAnimation 0.3s ease-in-out;
+}
+
+dialog {
+  width: 400px;
   padding: 20px;
   background-color: #ffffff;
   border: 1px solid #cccccc;
@@ -723,6 +732,7 @@ dialog button:hover {
     text-orientation: mixed;
     transform: rotate(-180deg);
     color: white;
+    user-select: none;
   }
 
   &.pending {

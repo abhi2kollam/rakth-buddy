@@ -7,6 +7,9 @@ import { ToastrService } from 'ngx-toastr';
 import { CrudService } from '../../shared/services/donor-crud.service';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { Donor } from 'src/app/shared/models/donor';
+import { DistrictCrudService } from 'src/app/shared/services/district-crud.service';
+import { District } from 'src/app/shared/models/district';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-edit-donor',
@@ -14,6 +17,8 @@ import { Donor } from 'src/app/shared/models/donor';
 })
 export class EditDonorComponent implements OnInit {
   donor: Partial<Donor> = {};
+  districts: Partial<District>[] = [];
+  locations: string[] = [];
   id: string | null = null;
   currentUser: any = {};
   maxDate: string = '';
@@ -21,6 +26,7 @@ export class EditDonorComponent implements OnInit {
 
   constructor(
     private crudApi: CrudService,
+    private districtApi: DistrictCrudService,
     private location: Location,
     private actRoute: ActivatedRoute,
     private router: Router,
@@ -40,17 +46,51 @@ export class EditDonorComponent implements OnInit {
         if (snapshot.exists) {
           const data = snapshot.data() as Donor;
           data.district = data.district ?? '';
+
+          if (data.district) {
+            this.onSelectDistrict(data.district);
+          }
           this.donor = data;
         }
       });
     }
+    this.districtApi
+      .getAll()
+      .snapshotChanges()
+      .pipe(
+        map((changes) =>
+          changes.map((c) => ({
+            ...c.payload.doc.data(),
+            id: c.payload.doc.id,
+          }))
+        )
+      )
+      .subscribe((districts) => {
+        if (districts) {
+          this.districts = districts;
+        }
+      });
+  }
+  onSelectDistrict(dist?: string) {
+    const district = this.districts.find((d) => d.name === dist);
+    this.locations = district?.places ?? [];
   }
 
   goBack() {
-    this.location.back();
+    this.router.navigate(['home', this.currentUser?.uid, 'list']);
   }
 
   updateForm() {
+    if (this.donor.location && !this.locations.includes(this.donor.location)) {
+      const dist = this.districts.find((d) => d.name === this.donor.district);
+      if (dist?.id) {
+        if (!dist?.places) {
+          dist.places = [];
+        }
+        dist?.places?.push(this.donor.location);
+        this.districtApi.update(dist?.id, dist);
+      }
+    }
     const data = this.donor;
     const currentTime = new Date().toISOString();
     if (this.id) {

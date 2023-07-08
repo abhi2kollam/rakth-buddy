@@ -4,6 +4,7 @@ export interface Donor {
   group: string;
   mobileNumber: number;
   district: string;
+  location: string;
   createdBy: string;
   createdTime: string;
   updatedBy: string;

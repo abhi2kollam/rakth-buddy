@@ -27,6 +27,9 @@ export class RequestListComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
+    this.loadList();
+  }
+  loadList() {
     combineLatest([
       this.donorApi.getDonorsList().get(),
       this.userApi.getAll().get(),
@@ -63,18 +66,18 @@ export class RequestListComponent implements OnInit {
       updatedTime: new Date().toISOString(),
     };
     await this.requestApi.update((this.request as any).id, data);
-    this.closeDialog()
-
+    this.closeDialog();
     this.toastr.success('Request updated successfully');
   }
 
   deleteRequest(request: any) {
     this.dialogService
-      .openConfirmation('Are sure you want to delete this donor ')
-      .then((confirmed: boolean) => {
-        if (confirmed) {
-          this.requestApi.delete(request.id);
-          this.toastr.success('request successfully deleted!');
+    .openConfirmation('Are sure you want to delete this request ')
+    .then((confirmed: boolean) => {
+      if (confirmed) {
+        this.requestApi.delete(request.id);
+        this.toastr.success('request successfully deleted!');
+        this.loadList();
         }
       });
   }

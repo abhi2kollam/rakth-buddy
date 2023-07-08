@@ -113,8 +113,6 @@ export class DonorListComponent implements OnInit {
     navigator.clipboard
       .writeText(donor.mobileNumber)
       .then(() => {
-        this.toastr.success('Mobile number copied to clipboard');
-        // You can also display a success message to the user
       })
       .catch((error) => {
         console.error('Error copying mobile number:', error);
