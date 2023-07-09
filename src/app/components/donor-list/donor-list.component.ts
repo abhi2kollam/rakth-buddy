@@ -43,19 +43,20 @@ export class DonorListComponent implements OnInit {
   ngOnInit() {
     const order: any = {
       available: 0,
-      unavailable: 1,
+      soon:1,
+      unavailable: 2,
     };
     const sortByDate = (a: any, b: any) => {
       const statusA = order[a.availableStatus];
       const statusB = order[b.availableStatus];
-      const dateA = new Date(a.updatedTime).getTime();
-      const dateB = new Date(b.updatedTime).getTime();
+      const dateA = new Date(a.createdTime).getTime();
+      const dateB = new Date(b.createdTime).getTime();
       if (statusA < statusB) {
         return -1;
       } else if (statusA > statusB) {
         return 1;
       }
-      return dateA - dateB;
+      return dateB - dateA;
     };
     this.currentUser = this.route.parent?.snapshot.data['data'];
     this.isAdmin =
