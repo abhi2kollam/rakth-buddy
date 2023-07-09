@@ -104,13 +104,13 @@
             <span *ngIf="donor.status === 'approved'" class=" me-2 btn btn-outline-success btn-sm" title="Call">
               <a href="tel:{{donor.mobileNumber}}"><em class="fas fa-phone fa-rotate-90"></em></a>
             </span>
-            <a *ngIf="!donor.status || donor.status === 'pending'" href="#"
-              (click)="requestContact($event,donor)">Request for contact</a>
-            <span *ngIf="donor.status === 'on-hold'" (click)="requestContact($event,donor)">Request put on
+            <a *ngIf="!donor.status" href="#" (click)="requestContact($event,donor)">Request for contact</a>
+            <span *ngIf="donor.status ==='pending'">Requested</span>
+            <span *ngIf="donor.status === 'on-hold'">Request put on
               hold
               <div class="font-sm">{{donor.remarks}}</div>
             </span>
-            <span *ngIf="donor.status === 'rejected'" (click)="requestContact($event,donor)">Request
+            <span *ngIf="donor.status === 'rejected'">Request
               rejected
               <div class="font-sm">{{donor.remarks}}</div>
             </span>

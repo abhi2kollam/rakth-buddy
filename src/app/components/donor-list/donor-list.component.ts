@@ -43,7 +43,7 @@ export class DonorListComponent implements OnInit {
   ngOnInit() {
     const order: any = {
       available: 0,
-      soon:1,
+      soon: 1,
       unavailable: 2,
     };
     const sortByDate = (a: any, b: any) => {
@@ -152,7 +152,12 @@ export class DonorListComponent implements OnInit {
   clearFilter() {
     this.searchText = '';
     this.complexFilter = null;
-    this.filter = { district: '', location: '', group: '', availableStatus: '' };
+    this.filter = {
+      district: '',
+      location: '',
+      group: '',
+      availableStatus: '',
+    };
   }
 
   dataState() {
@@ -193,6 +198,7 @@ export class DonorListComponent implements OnInit {
   requestContact(event: any, donor: Donor) {
     event.stopPropagation();
     event.preventDefault();
+    (donor as any).status = 'pending';
     this.requestApi.addRequest({
       createdTime: new Date().toISOString(),
       updatedTime: new Date().toISOString(),
