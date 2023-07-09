@@ -8,6 +8,7 @@ import {
 } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
 import { Observable, switchMap, take } from 'rxjs';
+import { LoaderService } from './loader.service';
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +17,7 @@ export class AuthService {
   userData: any; // Save logged in user data
   userRole = 'guest';
   constructor(
+    private loaderService: LoaderService,
     public afs: AngularFirestore, // Inject Firestore service
     public afAuth: AngularFireAuth, // Inject Firebase auth service
     public router: Router,
@@ -41,17 +43,21 @@ export class AuthService {
 
   // Sign in with email/password
   signIn(email: string, password: string) {
+    this.loaderService.showLoader();
+
     return this.afAuth
       .signInWithEmailAndPassword(email, password)
       .then((result) => {
         this.setUserData(result.user);
         this.afAuth.authState.pipe(take(1)).subscribe((user) => {
+          this.loaderService.hideLoader();
           if (user) {
             this.router.navigate(['home', user.uid, 'list']);
           }
         });
       })
       .catch((error) => {
+        this.loaderService.hideLoader();
         window.alert(error.message);
       });
   }
@@ -137,13 +143,15 @@ export class AuthService {
 
   // Auth logic to run auth providers
   authLogin(provider: any) {
+    this.loaderService.showLoader();
     return this.afAuth
       .signInWithPopup(provider)
       .then((result) => {
-        console.log('before setuser', new Date());
         this.setUserData(result.user, { provider: 'google' });
+        this.loaderService.hideLoader();
       })
       .catch((error) => {
+        this.loaderService.hideLoader();
         window.alert(error);
       });
   }

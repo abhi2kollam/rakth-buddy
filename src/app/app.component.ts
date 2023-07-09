@@ -5,7 +5,10 @@ import { DialogService } from './shared/services/dialog-service';
 
 @Component({
   selector: 'app-root',
-  template: '<router-outlet></router-outlet>',
+  template: `
+    <router-outlet></router-outlet>
+    <my-loader></my-loader>
+  `,
 })
 export class AppComponent implements OnInit {
   constructor(

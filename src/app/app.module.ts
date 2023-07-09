@@ -35,6 +35,8 @@ import { DataResolver } from './shared/guard/data-resolver';
 import { TimeAgoPipe } from './shared/pipes/time-ago.pipe';
 import { DialogService } from './shared/services/dialog-service';
 import { RequestFilterPipe } from './shared/pipes/request-filter.pipe';
+import { LoaderService } from './shared/services/loader.service';
+import { LoaderComponent } from './shared/components/loader.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +54,7 @@ import { RequestFilterPipe } from './shared/pipes/request-filter.pipe';
     UserListComponent,
     EditUserComponent,
     RequestListComponent,
+    LoaderComponent
   ],
   imports: [
     BrowserModule,
@@ -75,7 +78,7 @@ import { RequestFilterPipe } from './shared/pipes/request-filter.pipe';
       registrationStrategy: 'registerWhenStable:30000',
     }),
   ],
-  providers: [AuthService, DataResolver, DialogService],
+  providers: [AuthService, DataResolver, DialogService, LoaderService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
