@@ -40,27 +40,27 @@
         <ul class="nav flex-column">
           <li class="nav-item">
             <a class="nav-link" routerLink="/home/{{currentUser.uid}}/add" routerLinkActive="active">
-              <em class="fas fa-user-plus d-md-none" style="display: block;font-size: 1.5rem;"></em>
-              <span class="font-sm">Add Donor</span>
+              <em class="fas fa-user-plus d-md-none" style="display: block;font-size: 1rem;"></em>
+              <span class="font-sm-1">Add Donor</span>
             </a>
           </li>
 
           <li class="nav-item">
             <a class="nav-link" routerLink="/home/{{currentUser.uid}}/list" routerLinkActive="active">
-              <em class="fas fa-users d-md-none" style="display: block;font-size: 1.5rem;"></em>
-              <span class="font-sm">Donor List</span>
+              <em class="fas fa-users d-md-none" style="display: block;font-size: 1rem;"></em>
+              <span class="font-sm-1">Donor List</span>
             </a>
           </li>
           <li class="nav-item" *ngIf="isSuperAdmin">
             <a class="nav-link" routerLink="/home/{{currentUser.uid}}/users" routerLinkActive="active">
-              <em class="fas fa-users-cog d-md-none" style="display: block;font-size: 1.5rem;"></em>
-              <span class="font-sm">Users List</span>
+              <em class="fas fa-users-cog d-md-none" style="display: block;font-size: 1rem;"></em>
+              <span class="font-sm-1">Users List</span>
             </a>
           </li>
           <li class="nav-item" *ngIf="isAdmin">
             <a class="nav-link" routerLink="/home/{{currentUser.uid}}/requests" routerLinkActive="active">
-              <em class="fas fa-clipboard-check d-md-none" style="display: block;font-size: 1.5rem;"></em>
-              <span class="font-sm">Requests</span>
+              <em class="fas fa-clipboard-check d-md-none" style="display: block;font-size: 1rem;"></em>
+              <span class="font-sm-1">Requests</span>
             </a>
           </li>
         </ul>
@@ -68,7 +68,7 @@
     </nav>
 
     <!-- Main content -->
-    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10">
       <div class="inner-adjust">
         <router-outlet></router-outlet>
       </div>

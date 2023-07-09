@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { combineLatest, map } from 'rxjs';
+import { combineLatest, map, take } from 'rxjs';
 
 import { CrudService } from '../../shared/services/donor-crud.service';
 import { Donor } from '../../shared/models/donor';
@@ -10,6 +10,8 @@ import { RequestStatus } from 'src/app/shared/models/request';
 import { ActivatedRoute } from '@angular/router';
 import { UserCrudService } from 'src/app/shared/services/user-crud.service';
 import { DialogService } from 'src/app/shared/services/dialog-service';
+import { DistrictCrudService } from 'src/app/shared/services/district-crud.service';
+import { District } from 'src/app/shared/models/district';
 
 @Component({
   selector: 'app-donor-list',
@@ -24,8 +26,13 @@ export class DonorListComponent implements OnInit {
   preLoader: boolean = true;
   isAdmin = false;
   currentUser: any = {};
+  districts: District[] = [];
+  filter = { district: '', location: '', group: '', availableStatus: '' };
+  complexFilter: any = null;
+  advanced = false;
   constructor(
     public authService: AuthService,
+    private districtApi: DistrictCrudService,
     public crudApi: CrudService,
     public requestApi: RequestCrudService,
     public toastr: ToastrService,
@@ -102,6 +109,22 @@ export class DonorListComponent implements OnInit {
         this.donors = donorList;
       });
     }
+    this.districtApi
+      .getAll()
+      .valueChanges()
+
+      .pipe(take(1))
+      .subscribe((districts) => {
+        if (districts) {
+          this.districts = districts;
+        }
+      });
+  }
+
+  showAdvanced(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.advanced = !this.advanced;
   }
 
   defineColor(lastDonated: string) {
@@ -110,9 +133,25 @@ export class DonorListComponent implements OnInit {
     }
     const currentDate = new Date();
     const threeMonthsAgo = new Date();
+    const twoMonthsAgo = new Date();
     threeMonthsAgo.setMonth(currentDate.getMonth() - 3);
+    twoMonthsAgo.setMonth(currentDate.getMonth() - 2);
 
-    return new Date(lastDonated) > threeMonthsAgo ? 'unavailable' : 'available';
+    return new Date(lastDonated) > threeMonthsAgo
+      ? new Date(lastDonated) < twoMonthsAgo
+        ? 'soon'
+        : 'unavailable'
+      : 'available';
+  }
+
+  applyFilter() {
+    this.searchText = '';
+    this.complexFilter = { ...this.filter };
+  }
+  clearFilter() {
+    this.searchText = '';
+    this.complexFilter = null;
+    this.filter = { district: '', location: '', group: '', availableStatus: '' };
   }
 
   dataState() {
