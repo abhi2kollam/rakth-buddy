@@ -11,6 +11,8 @@ import { AuthService } from '../../shared/services/auth.service';
 import { ActivatedRoute } from '@angular/router';
 import { UserCrudService } from 'src/app/shared/services/user-crud.service';
 import { ToastrService } from 'ngx-toastr';
+import { AngularFireStorage } from '@angular/fire/compat/storage';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -23,6 +25,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
   isAdmin = false;
   isSuperAdmin = false;
   mobileNumber = '';
+  photoURL = '';
+  fileUploading = false;
   @ViewChild('myDialog') myDialog: ElementRef | undefined;
 
   @HostListener('window:click', ['$event'])
@@ -40,7 +44,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
     public authService: AuthService,
     private route: ActivatedRoute,
     private userCred: UserCrudService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private storage: AngularFireStorage
   ) {}
 
   ngAfterViewInit(): void {
@@ -98,14 +103,57 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   async saveStatus() {
+    this.currentUser = {
+      ...this.currentUser,
+      phoneNumber: this.mobileNumber,
+      photoURL: this.photoURL ?? null,
+    };
+    this.authService.setCurrentUserInfo(this.currentUser);
     await this.userCred.update(this.currentUser.uid, {
       phoneNumber: this.mobileNumber,
+      photoURL: this.photoURL ?? null,
     });
     this.toastr.success('User profile updated successfully');
     this.closeDialog();
+    this.photoURL = '';
   }
 
   closeDialog() {
     this.myDialog?.nativeElement.close();
+  }
+
+  onFileSelected(event: any) {
+    this.fileUploading = true;
+    var fileName = this.currentUser.uid;
+    const file = event.target.files[0];
+    if (file.type.split('/')[0] !== 'image') {
+      this.toastr.error('File type is not supported!');
+      return;
+    }
+    if (file.size > 200000) {
+      this.toastr.error('File size exceeds 2000KB');
+      return;
+    }
+    const filePath = `profilePics/${fileName}`;
+    const fileRef = this.storage.ref(filePath);
+    const task = this.storage.upload(`profilePics/${fileName}`, file);
+    task
+      .snapshotChanges()
+      .pipe(
+        finalize(() => {
+          fileRef.getDownloadURL().subscribe(
+            (url) => {
+              if (url) {
+                this.photoURL = url;
+                this.fileUploading = false;
+              }
+            },
+            () => {
+              this.fileUploading = false;
+            }
+          );
+        })
+      )
+      .subscribe(() => {});
   }
 }

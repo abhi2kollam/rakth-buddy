@@ -36,6 +36,7 @@ export class AuthService {
   setCurrentUserInfo(currentUser: any) {
     this.userRole = currentUser?.role ?? 'guest';
     this.userData.displayName = currentUser?.displayName;
+    this.userData.photoURL = currentUser?.photoURL;
   }
 
   // Sign in with email/password
