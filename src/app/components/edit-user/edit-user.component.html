@@ -40,6 +40,17 @@
                 </select>
                 <!-- errors-->
                 <p *ngIf="role?.touched && role?.invalid" class="error">
+                  <sup>*</sup>Please provide role
+                </p>
+              </div>
+            </div>
+            <div class="row" *ngIf="role?.value ==='admin'">
+              <div class="col-md-12 mb-3">
+                <label>Assigned Districts</label>
+                <select multiple name="district" class="form-control" formControlName="assignedDistricts">
+                  <option *ngFor="let dist of districts" [value]="dist.name">{{dist.name}}</option>
+                </select>
+                <p *ngIf="assignedDistricts?.touched && assignedDistricts?.invalid" class="error">
                   <sup>*</sup>Please provide group
                 </p>
               </div>

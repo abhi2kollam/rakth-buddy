@@ -12,4 +12,5 @@ export interface UserExtended extends User {
   uid: string;
   email: string;
   role: 'admin' | 'guest' | 'super-admin';
+  assignedDistricts?: string[];
 }

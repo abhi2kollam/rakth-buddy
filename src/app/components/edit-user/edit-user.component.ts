@@ -6,6 +6,9 @@ import { ToastrService } from 'ngx-toastr';
 
 import { CrudService } from '../../shared/services/donor-crud.service';
 import { UserCrudService } from 'src/app/shared/services/user-crud.service';
+import { DistrictCrudService } from 'src/app/shared/services/district-crud.service';
+import { take } from 'rxjs';
+import { District } from 'src/app/shared/models/district';
 
 @Component({
   selector: 'app-user-donor',
@@ -15,9 +18,10 @@ export class EditUserComponent implements OnInit {
   editForm: FormGroup | undefined;
   id: string | null = null;
   currentUser: any = {};
-
+  districts: District[] = [];
   constructor(
     private crudApi: UserCrudService,
+    private districtApi: DistrictCrudService,
     private fb: FormBuilder,
     private location: Location,
     private actRoute: ActivatedRoute,
@@ -37,6 +41,7 @@ export class EditUserComponent implements OnInit {
           const formData: any = {};
           formData.role = documentData.role ?? 'guest';
           formData.displayName = documentData.displayName ?? '';
+          formData.assignedDistricts = documentData.assignedDistricts ?? [];
           // Process the retrieved document here
           this.editForm?.setValue(formData);
         } else {
@@ -45,6 +50,15 @@ export class EditUserComponent implements OnInit {
         }
       });
     }
+    this.districtApi
+      .getAll()
+      .valueChanges()
+      .pipe(take(1))
+      .subscribe((districts) => {
+        if (districts) {
+          this.districts = districts;
+        }
+      });
   }
 
   get displayName() {
@@ -54,11 +68,15 @@ export class EditUserComponent implements OnInit {
   get role() {
     return this.editForm?.get('role');
   }
+  get assignedDistricts() {
+    return this.editForm?.get('assignedDistricts');
+  }
 
   updateUserData() {
     this.editForm = this.fb.group({
       displayName: ['', [Validators.required, Validators.minLength(2)]],
       role: ['', [Validators.required]],
+      assignedDistricts: [[]],
     });
   }
 

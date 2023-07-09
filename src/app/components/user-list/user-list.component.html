@@ -18,8 +18,12 @@
           <div class="row align-items-end flex-grow-1 text-break">
             <span class="col-md-6">
               {{ user.displayName ?? 'No Name Provided' }}
+              <span *ngIf="user.role == 'admin'">
+                <span class="font-sm" *ngIf="user.assignedDistricts">[{{user.assignedDistricts}}]</span>
+                <span class="font-sm" *ngIf="!user.assignedDistricts">No districts assigned</span>
+              </span>
             </span>
-            <span class="col-md-6" style="font-size: .7rem;">{{user.email}}</span>
+            <span class="col-md-6 font-sm" style="font-size: .7rem;">{{user.email}}</span>
           </div>
           <span class="ms-2 btn btn-outline-primary btn-sm" title="Edit"
             routerLink="/home/{{currentUser?.uid}}/users/{{ user.id }}">

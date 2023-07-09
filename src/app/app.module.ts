@@ -54,7 +54,7 @@ import { LoaderComponent } from './shared/components/loader.component';
     UserListComponent,
     EditUserComponent,
     RequestListComponent,
-    LoaderComponent
+    LoaderComponent,
   ],
   imports: [
     BrowserModule,
@@ -70,6 +70,7 @@ import { LoaderComponent } from './shared/components/loader.component';
     ToastrModule.forRoot({
       positionClass: 'toast-top-center',
       toastClass: 'ngx-toastr full-width-toastr',
+      tapToDismiss: true,
     }),
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,

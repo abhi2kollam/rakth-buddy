@@ -7,6 +7,8 @@ import { RequestCrudService } from 'src/app/shared/services/request-crud.service
 import { UserCrudService } from 'src/app/shared/services/user-crud.service';
 import { Request } from 'src/app/shared/models/request';
 import { DialogService } from 'src/app/shared/services/dialog-service';
+import { ActivatedRoute } from '@angular/router';
+import { UserExtended } from 'src/app/shared/models/user';
 @Component({
   selector: 'app-user-list',
   templateUrl: './request-list.component.html',
@@ -18,16 +20,18 @@ export class RequestListComponent implements OnInit {
   request: Partial<Request> = {};
   @ViewChild('myDialog') myDialog: ElementRef | undefined;
   selectedItems = ['pending', 'on-hold', 'approved', 'rejected'];
-
+  currentUser: UserExtended | null = null;
   constructor(
     public requestApi: RequestCrudService,
     private dialogService: DialogService,
     public userApi: UserCrudService,
     public donorApi: CrudService,
-    public toastr: ToastrService
+    public toastr: ToastrService,
+    private route: ActivatedRoute
   ) {}
 
   async ngOnInit() {
+    this.currentUser = this.route.parent?.snapshot.data['data'];
     this.loadList();
   }
   onStatusFilter(status: string, event: Event) {
@@ -55,16 +59,23 @@ export class RequestListComponent implements OnInit {
         const donorData = donors?.docs
           .find((donor) => donor.id === requestData.donorId)
           ?.data();
-        requestList.push({
-          ...request.data(),
-          id: request.id,
-          requesterName: userData?.displayName,
-          requesterEmail: userData?.email,
-          requesterMobile: userData?.phoneNumber,
-          donorName: donorData?.name,
-          donorMobile: donorData?.mobileNumber,
-          donorDistrict: donorData?.district,
-        });
+        if (
+          this.currentUser?.role == 'super-admin' ||
+          (donorData?.district &&
+            this.currentUser?.assignedDistricts &&
+            this.currentUser?.assignedDistricts?.includes(donorData?.district))
+        ) {
+          requestList.push({
+            ...request.data(),
+            id: request.id,
+            requesterName: userData?.displayName,
+            requesterEmail: userData?.email,
+            requesterMobile: userData?.phoneNumber,
+            donorName: donorData?.name,
+            donorMobile: donorData?.mobileNumber,
+            donorDistrict: donorData?.district,
+          });
+        }
       });
       const order: any = {
         pending: 0,
