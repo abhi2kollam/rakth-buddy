@@ -158,9 +158,11 @@ export class AuthService {
     const userData: Partial<UserExtended> = {
       uid: user.uid,
       email: user.email,
-      photoURL: user.photoURL,
       emailVerified: user.emailVerified,
     };
+    if (user.photoURL) {
+      userData.photoURL = user.photoURL;
+    }
     if (user.displayName || extra?.displayName) {
       userData.displayName = user.displayName ?? extra?.displayName;
     }

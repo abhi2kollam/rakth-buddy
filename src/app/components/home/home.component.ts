@@ -99,6 +99,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   openDialog() {
     this.showMenu = false;
+    this.photoURL = '';
     this.mobileNumber = this.currentUser?.phoneNumber;
     this.myDialog?.nativeElement.showModal();
   }
@@ -116,7 +117,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     });
     this.toastr.success('User profile updated successfully');
     this.closeDialog();
-    this.photoURL = '';
   }
 
   closeDialog() {
