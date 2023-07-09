@@ -123,11 +123,11 @@ export class AuthService {
   // Sign in with Google
   googleAuth() {
     return this.authLogin(new auth.GoogleAuthProvider()).then((res: any) => {
-      console.log("before authState",new Date());
+      console.log('before authState', new Date());
 
       this.afAuth.authState.pipe(take(1)).subscribe((user) => {
         if (user) {
-          console.log("before route navigate",new Date());
+          console.log('before route navigate', new Date());
 
           this.router.navigate(['home', user.uid, 'list']);
         }
@@ -140,8 +140,8 @@ export class AuthService {
     return this.afAuth
       .signInWithPopup(provider)
       .then((result) => {
-        console.log("before setuser",new Date());
-        this.setUserData(result.user);
+        console.log('before setuser', new Date());
+        this.setUserData(result.user, { provider: 'google' });
       })
       .catch((error) => {
         window.alert(error);
@@ -155,7 +155,7 @@ export class AuthService {
     const userRef: AngularFirestoreDocument<any> = this.afs.doc(
       `users/${user.uid}`
     );
-    const userData: Partial<User> = {
+    const userData: Partial<UserExtended> = {
       uid: user.uid,
       email: user.email,
       photoURL: user.photoURL,
@@ -166,6 +166,9 @@ export class AuthService {
     }
     if (user.phoneNumber || extra?.phoneNumber) {
       userData.phoneNumber = user.phoneNumber ?? extra?.phoneNumber;
+    }
+    if (extra?.provider) {
+      userData.provider = extra.provider;
     }
     return new Promise((resolve, reject) => {
       userRef.get().subscribe(

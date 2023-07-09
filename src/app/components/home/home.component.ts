@@ -27,6 +27,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   mobileNumber = '';
   photoURL = '';
   fileUploading = false;
+  showProfileUpload = true;
   @ViewChild('myDialog') myDialog: ElementRef | undefined;
 
   @HostListener('window:click', ['$event'])
@@ -56,7 +57,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.currentUser = this.route.snapshot.data['data'];
-
+    this.showProfileUpload = this.currentUser?.provider !== 'google';
     this.isSuperAdmin = this.currentUser?.role === 'super-admin';
     this.isAdmin =
       this.currentUser?.role === 'super-admin' ||

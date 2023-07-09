@@ -8,6 +8,7 @@ export interface User {
 }
 
 export interface UserExtended extends User {
+  provider?: string;
   uid: string;
   email: string;
   role: 'admin' | 'guest' | 'super-admin';
