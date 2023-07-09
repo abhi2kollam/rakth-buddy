@@ -17,7 +17,7 @@
               src="{{(user.photoURL) ? user.photoURL : '/assets/dummy-user.svg'}}" alt="{{user.displayName}}" />
             <strong class="text-center">{{(user.displayName) ? user.displayName : 'User'}}</strong>
             <p class="text-center text-black-50 mb-0 font-sm">{{user.email}}</p>
-            <p class="text-center text-black-50 mb-0 text-capitalize font-sm">({{currentUser?.role}})</p>
+            <p class="text-center text-black-50 mb-0 text-capitalize font-sm">({{currentUser?.role ??'Guest'}})</p>
           </a>
         </li>
         <li *ngIf="showInstallAppOption" (click)="installApp($event)"><a class="dropdown-item" href="#"> <i

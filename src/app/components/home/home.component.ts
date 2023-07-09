@@ -105,16 +105,18 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   async saveStatus() {
+    const data: any = {
+      phoneNumber: this.mobileNumber,
+    };
+    if (this.photoURL) {
+      data.photoURL = this.photoURL;
+    }
     this.currentUser = {
       ...this.currentUser,
-      phoneNumber: this.mobileNumber,
-      photoURL: this.photoURL ?? null,
+      ...data
     };
     this.authService.setCurrentUserInfo(this.currentUser);
-    await this.userCred.update(this.currentUser.uid, {
-      phoneNumber: this.mobileNumber,
-      photoURL: this.photoURL ?? null,
-    });
+    await this.userCred.update(this.currentUser.uid, data);
     this.toastr.success('User profile updated successfully');
     this.closeDialog();
   }
