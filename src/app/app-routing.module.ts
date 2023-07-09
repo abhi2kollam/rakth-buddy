@@ -15,17 +15,22 @@ import { EditUserComponent } from './components/edit-user/edit-user.component';
 import { AdminAuthGuard } from './shared/guard/admin.guard';
 import { RequestListComponent } from './components/request-list/request-list.component';
 import { DataResolver } from './shared/guard/data-resolver';
+import { LoginGuard } from './shared/guard/login.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: '/sign-in', pathMatch: 'full' },
-  { path: 'sign-in', component: SignInComponent },
-  { path: 'register-user', component: SignUpComponent },
+  { path: 'sign-in', component: SignInComponent, canActivate: [LoginGuard] },
+  {
+    path: 'register-user',
+    component: SignUpComponent,
+    canActivate: [LoginGuard],
+  },
   {
     path: 'home/:id',
     component: HomeComponent,
     canActivate: [AuthGuard],
     resolve: {
-      data: DataResolver
+      data: DataResolver,
     },
     children: [
       { path: 'add', component: EditDonorComponent },

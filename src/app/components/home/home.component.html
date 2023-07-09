@@ -22,6 +22,7 @@
         </li>
         <li *ngIf="showInstallAppOption" (click)="installApp($event)"><a class="dropdown-item" href="#"> <i
               class="fas fa-arrow-down"></i>Install App</a>
+        <li (click)="openDialog()"><a class="dropdown-item" href="#"> <i class="fas fa-user-cog"></i>Update Profile</a>
         <li (click)="checkForUpdates($event)"><a class="dropdown-item" href="#"> <i class="fas fa-retweet"></i>Check for
             updates</a>
         <li (click)="logout($event)"><a class="dropdown-item" href="#"> <i class="fas fa-door-open pe-2"></i>Logout</a>
@@ -73,4 +74,28 @@
       </div>
     </main>
   </div>
+  <dialog #myDialog>
+    <h4>
+      Update Profile
+    </h4>
+    <form  #editForm="ngForm">
+      <div class="form-group mb-2">
+        <label>Mobile number <span class="font-sm"> (with out country code)</span></label>
+        <input type="tel" name="mobileNumber" [ngModelOptions]="{standalone:true}" [(ngModel)]="mobileNumber"
+          pattern="[0-9]{10}" class="form-control" required maxlength="10" #mobile="ngModel" />
+
+        <p *ngIf="mobile?.touched && mobile?.errors?.['required']" class="error">
+          <sup>*</sup>Please provide contact number
+        </p>
+        <p *ngIf="mobile?.errors?.['pattern']" class="error">
+          <sup>*</sup>Mobile Number is invalid
+        </p>
+      </div>
+      <div class="mt-3 d-flex justify-content-evenly">
+        <button type="submit" class="btn btn-primary me-2" [disabled]="mobile.invalid" (click)="saveStatus()">Save</button>
+        <button class="btn btn-secondary" (click)="closeDialog()">Close</button>
+      </div>
+    </form>
+
+  </dialog>
 </div>
