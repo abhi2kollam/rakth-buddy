@@ -294,7 +294,7 @@ input:-moz-placeholder {
 }
 
 .nav-link {
-  padding: 1rem;
+  padding: .8rem;
   border-bottom: 1px solid #dde0e2;
   cursor: pointer;
 }
@@ -514,6 +514,7 @@ label {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: 0 0;
+  aspect-ratio:1/1;
 }
 
 body .table thead th {

@@ -1,4 +1,4 @@
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-3">
   <div class="btn-group w-100" role="group" aria-label="Basic checkbox toggle button group">
     <input type="checkbox" [checked]="selectedItems.includes('pending')" class="btn-check" id="btncheck1"
       (change)="onStatusFilter('pending',$event)" autocomplete="off">
@@ -48,21 +48,18 @@
         <div (click)="request.opened = !request.opened " class=" p-2 d-flex justify-content-between align-items-center"
           style="cursor: pointer;margin-left: 20px;">
           <div class="row align-items-end flex-grow-1">
-            <span class="text-break font-sm d-flex align-items-center">
-              <span *ngIf="!isGuestUser">
-                <i class="fas fa-caret-right m-0" *ngIf="!request.opened"></i>
-                <i class="fas fa-caret-down m-0" *ngIf="request.opened"></i>
+            <span class="text-break  d-flex align-items-center">
+              <span>
+                <em class="fas fa-caret-right m-0" *ngIf="!request.opened"></em>
+                <em class="fas fa-caret-down m-0" *ngIf="request.opened"></em>
               </span>
-              <span *ngIf="isGuestUser">
-                <i class="fas fa-caret-right m-0 vis" *ngIf="!request.opened"></i>
-                <i class="fas fa-caret-down m-0" *ngIf="request.opened"></i>
-              </span>
-              <img *ngIf="!isGuestUser" class="d-inline p-0 align-self-start user-image mx-1 img-thumbnail rounded-circle"
+              <img *ngIf="!isGuestUser"
+                class="d-inline p-0 align-self-start user-image mx-1 img-thumbnail rounded-circle"
                 src="{{(request.requesterPhoto) ? request.requesterPhoto : '/assets/dummy-user.svg'}}"
                 alt="{{request.requesterName}}">
               <div>
                 <strong class="fs-6">{{ request.requesterName }}</strong>
-                <div>{{isGuestUser? 'have':'has'}} requested contact info of <strong
+                <div class="font-sm">{{isGuestUser? 'have':'has'}} requested contact info of <strong
                     class="fs-6">{{request.donorName}}</strong>
                   (Dist:{{request.donorDistrict}})</div>
               </div>
@@ -70,11 +67,6 @@
           </div>
           <span class="d-flex align-items-center">
             <span class="border-1 border px-2 rounded border-info me-2">{{request.group}}</span>
-            <span *ngIf="!isGuestUser" class=" me-2 btn btn-outline-primary btn-sm mb-1" (click)="openDialog(request)"
-              title="Action">
-              <em class="fas fa-tasks"></em>
-            </span>
-
           </span>
         </div>
         <div *ngIf="request.opened" class="bg-info-subtle">
@@ -89,16 +81,20 @@
                   class="fas fa-phone fa-rotate-90"></em> Requester
               </a>
             </span>
+            <span *ngIf="!isGuestUser" class=" me-2 btn btn-outline-primary btn-sm" (click)="openDialog(request)"
+              title="Action">
+              <em class="fas fa-tasks"></em>
+            </span>
             <span class=" me-2 btn btn-outline-danger btn-sm" (click)="deleteRequest(request)" title="Delete">
               <em class="fas fa-trash-alt"></em>
             </span>
           </div>
           <div *ngIf="isGuestUser" class="text-center py-2">
-              <span *ngIf="request.status === 'approved'" class=" me-2 btn btn-outline-success btn-sm" title="Call">
-                <a href="tel:{{request.mobileNumber}}"><em class="fas fa-phone fa-rotate-90"></em></a>
-              </span>
-              <div *ngIf="request.remarks" class="font-sm">{{request.remarks}}</div>
-              <div *ngIf="!request.remarks" class="font-sm">No remarks</div>
+            <span *ngIf="request.status === 'approved'" class=" me-2 btn btn-outline-success btn-sm" title="Call">
+              <a href="tel:{{request.mobileNumber}}"><em class="fas fa-phone fa-rotate-90"></em></a>
+            </span>
+            <div *ngIf="request.remarks" class="font-sm">{{request.remarks}}</div>
+            <div *ngIf="!request.remarks" class="font-sm">No remarks</div>
           </div>
         </div>
       </div>

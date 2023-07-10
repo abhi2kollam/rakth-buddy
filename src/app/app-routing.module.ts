@@ -16,6 +16,7 @@ import { AdminAuthGuard } from './shared/guard/admin.guard';
 import { RequestListComponent } from './components/request-list/request-list.component';
 import { DataResolver } from './shared/guard/data-resolver';
 import { LoginGuard } from './shared/guard/login.guard';
+import { LocListComponent } from './components/loc-list/loc-list.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/sign-in', pathMatch: 'full' },
@@ -40,6 +41,11 @@ const routes: Routes = [
       {
         path: 'users',
         component: UserListComponent,
+        // canActivate: [SuperAdminAuthGuard],
+      },
+      {
+        path: 'locations',
+        component: LocListComponent,
         // canActivate: [SuperAdminAuthGuard],
       },
       {

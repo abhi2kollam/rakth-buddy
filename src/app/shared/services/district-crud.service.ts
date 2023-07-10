@@ -25,6 +25,10 @@ export class DistrictCrudService {
     return this.districtsRef;
   }
 
+  add(data: District): any {
+    return this.districtsRef.add(data);
+  }
+
   get(id: string): any {
     return this.districtsRef.doc(id).get();
   }
