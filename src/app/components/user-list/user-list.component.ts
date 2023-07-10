@@ -16,6 +16,8 @@ export class UserListComponent implements OnInit {
   users: UserExtended[] = [];
   currentUser: any = {};
 
+  selectedItems: string[] = ['guest','admin','super-admin'];
+
   constructor(
     public crudApi: UserCrudService,
     private route: ActivatedRoute,
@@ -43,5 +45,15 @@ export class UserListComponent implements OnInit {
 
         this.users = data.filter((doc: any) => doc.id !== this.currentUser.uid);
       });
+  }
+
+  onStatusFilter(status: string, event: Event) {
+    if ((event?.target as any)?.checked) {
+      this.selectedItems.push(status);
+    } else {
+      const index = this.selectedItems.findIndex((s) => s === status);
+      this.selectedItems.splice(index, 1);
+    }
+    this.selectedItems = [...this.selectedItems];
   }
 }

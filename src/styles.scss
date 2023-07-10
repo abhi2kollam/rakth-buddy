@@ -663,7 +663,6 @@ body .table thead th {
 
   .rounded-circle {
     max-width: 150px;
-    margin: 0 auto 0px !important;
     display: block;
   }
 
@@ -908,4 +907,9 @@ dialog button:hover {
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
   }
+}
+.shield{
+  position: absolute;
+  bottom: 0;
+  right: 0;
 }

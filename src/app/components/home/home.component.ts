@@ -28,6 +28,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   photoURL = '';
   fileUploading = false;
   showProfileUpload = true;
+  firstTimeVisit = false;
   @ViewChild('myDialog') myDialog: ElementRef | undefined;
 
   @HostListener('window:click', ['$event'])
@@ -51,6 +52,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     if (!this.currentUser?.phoneNumber) {
+      this.firstTimeVisit = true;
       this.openDialog();
     }
   }
@@ -113,7 +115,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     }
     this.currentUser = {
       ...this.currentUser,
-      ...data
+      ...data,
     };
     this.authService.setCurrentUserInfo(this.currentUser);
     await this.userCred.update(this.currentUser.uid, data);

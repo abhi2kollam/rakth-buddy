@@ -37,6 +37,7 @@ import { DialogService } from './shared/services/dialog-service';
 import { RequestFilterPipe } from './shared/pipes/request-filter.pipe';
 import { LoaderService } from './shared/services/loader.service';
 import { LoaderComponent } from './shared/components/loader.component';
+import { UserFilterPipe } from './shared/pipes/user-filter.pipe';
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import { LoaderComponent } from './shared/components/loader.component';
     FilterPipe,
     RequestFilterPipe,
     TimeAgoPipe,
+    UserFilterPipe,
     UserListComponent,
     EditUserComponent,
     RequestListComponent,

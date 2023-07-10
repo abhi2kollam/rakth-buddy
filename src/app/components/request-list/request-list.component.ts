@@ -71,9 +71,11 @@ export class RequestListComponent implements OnInit {
             requesterName: userData?.displayName,
             requesterEmail: userData?.email,
             requesterMobile: userData?.phoneNumber,
+            requesterPhoto:userData?.photoURL,
             donorName: donorData?.name,
             donorMobile: donorData?.mobileNumber,
             donorDistrict: donorData?.district,
+            group: donorData?.group,
           });
         }
       });
