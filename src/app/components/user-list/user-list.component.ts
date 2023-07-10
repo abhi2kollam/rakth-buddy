@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { filter, map } from 'rxjs';
+import { map } from 'rxjs';
 
-import { UserExtended } from 'src/app/shared/models/user';
+import { Role, UserExtended } from 'src/app/shared/models/user';
 import { UserCrudService } from 'src/app/shared/services/user-crud.service';
 
 @Component({
@@ -15,8 +15,10 @@ export class UserListComponent implements OnInit {
   searchText = '';
   users: UserExtended[] = [];
   currentUser: any = {};
-
-  selectedItems: string[] = ['guest','admin','super-admin'];
+  hideWhenNoUser: boolean = false;
+  noData: boolean = false;
+  preLoader: boolean = true;
+  selectedItems: string[] = ['guest', 'admin', 'super-admin'];
 
   constructor(
     public crudApi: UserCrudService,
@@ -33,17 +35,19 @@ export class UserListComponent implements OnInit {
       .pipe(
         map((changes) =>
           changes.map((c) => ({
-            id: c.payload.doc.id,
             ...c.payload.doc.data(),
+            id: c.payload.doc.id,
           }))
         )
       )
       .subscribe((data) => {
         data.forEach((item, index, list) => {
-          list[index].role = list[index].role ?? 'guest';
+          list[index].role = list[index].role ?? Role.Guest;
         });
-
-        this.users = data.filter((doc: any) => doc.id !== this.currentUser.uid);
+        this.users = data.filter(
+          (doc: any) => doc.uid !== this.currentUser.uid
+        );
+        this.handleDataChange(this.users);
       });
   }
 
@@ -55,5 +59,11 @@ export class UserListComponent implements OnInit {
       this.selectedItems.splice(index, 1);
     }
     this.selectedItems = [...this.selectedItems];
+  }
+
+  private handleDataChange(usersList: UserExtended[]) {
+    this.preLoader = false;
+    this.hideWhenNoUser = !(usersList.length <= 0);
+    this.noData = usersList.length <= 0;
   }
 }

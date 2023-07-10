@@ -21,6 +21,10 @@ export class RequestListComponent implements OnInit {
   @ViewChild('myDialog') myDialog: ElementRef | undefined;
   selectedItems = ['pending', 'on-hold', 'approved', 'rejected'];
   currentUser: UserExtended | null = null;
+
+  hideWhenNoRequests: boolean = false;
+  noData: boolean = false;
+  preLoader: boolean = true;
   constructor(
     public requestApi: RequestCrudService,
     private dialogService: DialogService,
@@ -34,6 +38,7 @@ export class RequestListComponent implements OnInit {
     this.currentUser = this.route.parent?.snapshot.data['data'];
     this.loadList();
   }
+
   onStatusFilter(status: string, event: Event) {
     if ((event?.target as any)?.checked) {
       this.selectedItems.push(status);
@@ -90,15 +95,11 @@ export class RequestListComponent implements OnInit {
         const statusB = order[b.status];
         const dateA = new Date(a.updatedTime).getTime();
         const dateB = new Date(b.updatedTime).getTime();
-        if (statusA < statusB) {
-          return -1;
-        } else if (statusA > statusB) {
-          return 1;
-        }
-        return dateA - dateB;
+        return statusA < statusB ? -1 : statusA > statusB ? 1 : dateB - dateA;
       };
       requestList.sort(sortByDate);
       this.requests = requestList;
+      this.handleDataChange(this.requests);
     });
   }
   async saveStatus() {
@@ -125,7 +126,14 @@ export class RequestListComponent implements OnInit {
   }
   openDialog(request: Partial<Request>) {
     this.request = request;
-    this.myDialog?.nativeElement.showModal();
+    if (!this.myDialog?.nativeElement.open) {
+      this.myDialog?.nativeElement.showModal();
+    }
+  }
+  private handleDataChange(reqList: Request[]) {
+    this.preLoader = false;
+    this.hideWhenNoRequests = !(reqList.length <= 0);
+    this.noData =( reqList.length <= 0);
   }
 
   closeDialog() {

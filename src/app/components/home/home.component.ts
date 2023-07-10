@@ -103,7 +103,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.showMenu = false;
     this.photoURL = '';
     this.mobileNumber = this.currentUser?.phoneNumber;
-    this.myDialog?.nativeElement.showModal();
+    if (!this.myDialog?.nativeElement.open) {
+      this.myDialog?.nativeElement.showModal();
+    }
   }
 
   async saveStatus() {

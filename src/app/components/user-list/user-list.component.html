@@ -19,10 +19,20 @@
 </div>
 
 <div class="pricing-header mx-auto">
-  <div class="table-custom">
+  <div class="no-data text-center" *ngIf="preLoader">
+    <p class="nodata-msg">
+      <em class="fas fa-spinner fa-spin"></em>
+      Loading...
+    </p>
+  </div>
+
+  <div class="no-data text-center" *ngIf="noData">
+    <p class="nodata-msg">No users yet!</p>
+  </div>
+  <div class="table-custom" *ngIf="hideWhenNoUser">
     <div class="table-row" *ngFor="
             let user of users
-              | userFilter: selectedItems
+              | segmentedFilter: selectedItems:'role'
               | paginate: { itemsPerPage: 10, currentPage: p };
             let i = index
           ">

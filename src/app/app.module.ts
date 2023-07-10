@@ -34,10 +34,9 @@ import { RequestListComponent } from './components/request-list/request-list.com
 import { DataResolver } from './shared/guard/data-resolver';
 import { TimeAgoPipe } from './shared/pipes/time-ago.pipe';
 import { DialogService } from './shared/services/dialog-service';
-import { RequestFilterPipe } from './shared/pipes/request-filter.pipe';
 import { LoaderService } from './shared/services/loader.service';
 import { LoaderComponent } from './shared/components/loader.component';
-import { UserFilterPipe } from './shared/pipes/user-filter.pipe';
+import { SegmentedFilterPipe } from './shared/pipes/segmented-filter.pipe';
 
 @NgModule({
   declarations: [
@@ -50,9 +49,8 @@ import { UserFilterPipe } from './shared/pipes/user-filter.pipe';
     EditDonorComponent,
     DonorListComponent,
     FilterPipe,
-    RequestFilterPipe,
     TimeAgoPipe,
-    UserFilterPipe,
+    SegmentedFilterPipe,
     UserListComponent,
     EditUserComponent,
     RequestListComponent,

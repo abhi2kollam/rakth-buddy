@@ -8,9 +8,20 @@ export interface User {
 }
 
 export interface UserExtended extends User {
+  id: string;
   provider?: string;
   uid: string;
   email: string;
-  role: 'admin' | 'guest' | 'super-admin';
+  role: Role;
   assignedDistricts?: string[];
 }
+
+export enum Role {
+  Admin = 'admin',
+  Guest = 'guest',
+  SuperAdmin = 'super-admin',
+}
+
+export const isAdminRole = (role: Role) => {
+  return [Role.Admin, Role.SuperAdmin].includes(role);
+};

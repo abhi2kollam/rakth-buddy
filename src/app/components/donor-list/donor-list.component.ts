@@ -8,10 +8,10 @@ import { AuthService } from 'src/app/shared/services/auth.service';
 import { RequestCrudService } from 'src/app/shared/services/request-crud.service';
 import { RequestStatus } from 'src/app/shared/models/request';
 import { ActivatedRoute } from '@angular/router';
-import { UserCrudService } from 'src/app/shared/services/user-crud.service';
 import { DialogService } from 'src/app/shared/services/dialog-service';
 import { DistrictCrudService } from 'src/app/shared/services/district-crud.service';
 import { District } from 'src/app/shared/models/district';
+import { isAdminRole } from 'src/app/shared/models/user';
 
 @Component({
   selector: 'app-donor-list',
@@ -51,21 +51,14 @@ export class DonorListComponent implements OnInit {
       const statusB = order[b.availableStatus];
       const dateA = new Date(a.createdTime).getTime();
       const dateB = new Date(b.createdTime).getTime();
-      if (statusA < statusB) {
-        return -1;
-      } else if (statusA > statusB) {
-        return 1;
-      }
-      return dateB - dateA;
+      return statusA < statusB ? -1 : statusA > statusB ? 1 : dateB - dateA;
     };
     this.currentUser = this.route.parent?.snapshot.data['data'];
-    this.isAdmin =
-      this.currentUser.role === 'admin' ||
-      this.currentUser.role === 'super-admin';
-    this.dataState();
+    this.isAdmin = isAdminRole(this.currentUser.role);
     if (this.isAdmin) {
-      let s = this.crudApi.getDonorsList();
-      s.snapshotChanges()
+      let s = this.crudApi
+        .getDonorsList()
+        .snapshotChanges()
         .pipe(
           map((changes) =>
             changes.map((c) => ({
@@ -80,6 +73,7 @@ export class DonorListComponent implements OnInit {
         .subscribe((donorList) => {
           donorList.sort(sortByDate);
           this.donors = donorList;
+          this.handleDataChange(this.donors);
         });
     } else {
       combineLatest([
@@ -104,16 +98,14 @@ export class DonorListComponent implements OnInit {
             remarks: requestData[0]?.data()?.remarks,
           });
         });
-
         donorList.sort(sortByDate);
-
         this.donors = donorList;
+        this.handleDataChange(this.donors);
       });
     }
     this.districtApi
       .getAll()
       .valueChanges()
-
       .pipe(take(1))
       .subscribe((districts) => {
         if (districts) {
@@ -149,6 +141,7 @@ export class DonorListComponent implements OnInit {
     this.searchText = '';
     this.complexFilter = { ...this.filter };
   }
+
   clearFilter() {
     this.searchText = '';
     this.complexFilter = null;
@@ -160,21 +153,12 @@ export class DonorListComponent implements OnInit {
     };
   }
 
-  dataState() {
-    this.crudApi
-      .getDonorsList()
-      .valueChanges()
-      .subscribe((data) => {
-        this.preLoader = false;
-        if (data.length <= 0) {
-          this.hideWhenNoDonor = false;
-          this.noData = true;
-        } else {
-          this.hideWhenNoDonor = true;
-          this.noData = false;
-        }
-      });
+  private handleDataChange(donorList: Donor[]) {
+    this.preLoader = false;
+    this.hideWhenNoDonor = !(donorList.length <= 0);
+    this.noData = donorList.length <= 0;
   }
+
   copyContact(donor: any) {
     navigator.clipboard
       .writeText(donor.mobileNumber)
@@ -195,6 +179,7 @@ export class DonorListComponent implements OnInit {
         }
       });
   }
+
   requestContact(event: any, donor: Donor) {
     event.stopPropagation();
     event.preventDefault();

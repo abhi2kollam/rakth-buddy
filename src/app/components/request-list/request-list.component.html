@@ -22,15 +22,22 @@
   </div>
 </div>
 
-<div class="no-data text-center" *ngIf="!requests?.length">
-  <p class="nodata-msg">No requests yet!</p>
-</div>
 
 <div class="pricing-header mx-auto">
-  <div class=" table-custom">
+  <div class="no-data text-center" *ngIf="preLoader">
+    <p class="nodata-msg">
+      <em class="fas fa-spinner fa-spin"></em>
+      Loading...
+    </p>
+  </div>
+
+  <div class="no-data text-center" *ngIf="noData">
+    <p class="nodata-msg">No users yet!</p>
+  </div>
+  <div class=" table-custom" *ngIf="hideWhenNoRequests">
     <div class="table-row" *ngFor="
             let request of requests
-              | requestFilter: selectedItems
+              | segmentedFilter: selectedItems:'status'
               | paginate: { itemsPerPage: 5, currentPage: p };
             let i = index
           ">
@@ -38,17 +45,20 @@
         <div class="color-bar" [class]="request.status">
           <span class="color-text font-sm">{{request.status}}</span>
         </div>
-        <div (click)="request.opened = !request.opened " class=" p-2 d-flex justify-content-between align-items-center" style="cursor: pointer;margin-left: 20px;">
+        <div (click)="request.opened = !request.opened " class=" p-2 d-flex justify-content-between align-items-center"
+          style="cursor: pointer;margin-left: 20px;">
           <div class="row align-items-end flex-grow-1">
             <span class="text-break font-sm d-flex align-items-center">
               <i class="fas fa-caret-right m-0" *ngIf="!request.opened"></i>
               <i class="fas fa-caret-down m-0" *ngIf="request.opened"></i>
               <img class="d-inline p-0 align-self-start user-image mx-1 img-thumbnail rounded-circle"
-            src="{{(request.requesterPhoto) ? request.requesterPhoto : '/assets/dummy-user.svg'}}" alt="{{request.requesterName}}">
-            <div>
-              <strong class="fs-6">{{ request.requesterName }}</strong>
-              <div>has requested contact info of <strong class="fs-6">{{request.donorName}}</strong> (Dist:{{request.donorDistrict}})</div>
-            </div>
+                src="{{(request.requesterPhoto) ? request.requesterPhoto : '/assets/dummy-user.svg'}}"
+                alt="{{request.requesterName}}">
+              <div>
+                <strong class="fs-6">{{ request.requesterName }}</strong>
+                <div>has requested contact info of <strong class="fs-6">{{request.donorName}}</strong>
+                  (Dist:{{request.donorDistrict}})</div>
+              </div>
             </span>
           </div>
           <span class="d-flex align-items-center">
@@ -95,8 +105,8 @@
       </div>
       <div class="form-group mb-2">
         <label for="remarks">Remarks</label>
-        <textarea id="remarks" class="form-control" [(ngModel)]="request.remarks" [ngModelOptions]="{standalone: true}" id="email"
-          placeholder="Remarks/Reason"></textarea>
+        <textarea id="remarks" class="form-control" [(ngModel)]="request.remarks" [ngModelOptions]="{standalone: true}"
+          id="email" placeholder="Remarks/Reason"></textarea>
       </div>
       <div class="mt-3 d-flex justify-content-evenly">
         <button type="submit" class="btn btn-primary me-2" (click)="saveStatus()">Submit</button>

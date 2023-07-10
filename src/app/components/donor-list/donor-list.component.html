@@ -51,6 +51,10 @@
 
 <div class="pricing-header mx-auto">
   <div class="no-data text-center" *ngIf="preLoader">
+    <p class="nodata-msg">
+      <em class="fas fa-spinner fa-spin"></em>
+      Loading...
+    </p>
   </div>
 
   <div class="no-data text-center" *ngIf="noData">
