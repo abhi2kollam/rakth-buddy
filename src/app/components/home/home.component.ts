@@ -13,6 +13,11 @@ import { UserCrudService } from 'src/app/shared/services/user-crud.service';
 import { ToastrService } from 'ngx-toastr';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { finalize } from 'rxjs';
+import {
+  Role,
+  isAdminRole,
+  isSuperAdminRole,
+} from 'src/app/shared/models/user';
 
 @Component({
   selector: 'app-home',
@@ -29,6 +34,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   fileUploading = false;
   showProfileUpload = true;
   firstTimeVisit = false;
+  roles = Role;
   @ViewChild('myDialog') myDialog: ElementRef | undefined;
 
   @HostListener('window:click', ['$event'])
@@ -60,10 +66,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.currentUser = this.route.snapshot.data['data'];
     this.showProfileUpload = this.currentUser?.provider !== 'google';
-    this.isSuperAdmin = this.currentUser?.role === 'super-admin';
-    this.isAdmin =
-      this.currentUser?.role === 'super-admin' ||
-      this.currentUser?.role === 'admin';
+    this.isSuperAdmin = isSuperAdminRole(this.currentUser?.role);
+    this.isAdmin = isAdminRole(this.currentUser?.role);
     this.authService.setCurrentUserInfo(this.currentUser);
     if (!window.matchMedia('(display-mode: standalone)').matches) {
       this.showInstallAppOption = true;

@@ -9,7 +9,7 @@
         <a class="nav-link p-0 border-0 position-relative" (click)="openUserMenu($event)" href="#">
           <img class=" p-0 align-self-start user-image mr-5 img-thumbnail rounded-circle"
             src="{{(user.photoURL) ? user.photoURL : '/assets/dummy-user.svg'}}" alt="{{user.displayName}}">
-          <svg *ngIf="currentUser?.role?.includes('admin')" class="shield" xmlns="http://www.w3.org/2000/svg"
+          <svg *ngIf="currentUser?.role?.includes(roles.Admin)" class="shield" xmlns="http://www.w3.org/2000/svg"
             height="1em" viewBox="0 0 512 512">
             <path
               d="M256 0c4.6 0 9.2 1 13.4 2.9L457.7 82.8c22 9.3 38.4 31 38.3 57.2c-.5 99.2-41.3 280.7-213.6 363.2c-16.7 8-36.1 8-52.8 0C57.3 420.7 16.5 239.2 16 140c-.1-26.2 16.3-47.9 38.3-57.2L242.7 2.9C246.8 1 251.4 0 256 0zm0 66.8V444.8C394 378 431.1 230.1 432 141.4L256 66.8l0 0z" />
@@ -62,10 +62,11 @@
               <span class="font-sm-1">Users List</span>
             </a>
           </li>
-          <li class="nav-item" *ngIf="isAdmin">
+          <li class="nav-item" >
             <a class="nav-link" routerLink="/home/{{currentUser.uid}}/requests" routerLinkActive="active">
               <em class="fas fa-clipboard-check d-md-inline me-md-2" style="display: block;font-size: 1rem;"></em>
-              <span class="font-sm-1">Requests</span>
+              <span *ngIf="isAdmin" class="font-sm-1">Requests</span>
+              <span *ngIf="!isAdmin" class="font-sm-1">My Requests</span>
             </a>
           </li>
         </ul>

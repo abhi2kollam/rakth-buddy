@@ -1,14 +1,14 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { combineLatest, map } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 import { CrudService } from 'src/app/shared/services/donor-crud.service';
 import { RequestCrudService } from 'src/app/shared/services/request-crud.service';
 import { UserCrudService } from 'src/app/shared/services/user-crud.service';
 import { Request } from 'src/app/shared/models/request';
 import { DialogService } from 'src/app/shared/services/dialog-service';
-import { ActivatedRoute } from '@angular/router';
-import { UserExtended } from 'src/app/shared/models/user';
+import { Role, UserExtended } from 'src/app/shared/models/user';
 @Component({
   selector: 'app-user-list',
   templateUrl: './request-list.component.html',
@@ -21,10 +21,11 @@ export class RequestListComponent implements OnInit {
   @ViewChild('myDialog') myDialog: ElementRef | undefined;
   selectedItems = ['pending', 'on-hold', 'approved', 'rejected'];
   currentUser: UserExtended | null = null;
-
   hideWhenNoRequests: boolean = false;
   noData: boolean = false;
   preLoader: boolean = true;
+  isGuestUser = false;
+
   constructor(
     public requestApi: RequestCrudService,
     private dialogService: DialogService,
@@ -36,6 +37,7 @@ export class RequestListComponent implements OnInit {
 
   async ngOnInit() {
     this.currentUser = this.route.parent?.snapshot.data['data'];
+    this.isGuestUser = this.currentUser?.role === Role.Guest;
     this.loadList();
   }
 
@@ -65,18 +67,23 @@ export class RequestListComponent implements OnInit {
           .find((donor) => donor.id === requestData.donorId)
           ?.data();
         if (
-          this.currentUser?.role == 'super-admin' ||
-          (donorData?.district &&
+          this.currentUser?.role == Role.SuperAdmin ||
+          (this.currentUser?.role == Role.Admin &&
+            donorData?.district &&
             this.currentUser?.assignedDistricts &&
-            this.currentUser?.assignedDistricts?.includes(donorData?.district))
+            this.currentUser?.assignedDistricts?.includes(
+              donorData?.district
+            )) ||
+          (this.currentUser?.role === Role.Guest &&
+            requestData.requesterId === this.currentUser.uid)
         ) {
           requestList.push({
-            ...request.data(),
+            ...requestData,
             id: request.id,
-            requesterName: userData?.displayName,
+            requesterName: this.isGuestUser ? 'You' : userData?.displayName,
             requesterEmail: userData?.email,
             requesterMobile: userData?.phoneNumber,
-            requesterPhoto:userData?.photoURL,
+            requesterPhoto: userData?.photoURL,
             donorName: donorData?.name,
             donorMobile: donorData?.mobileNumber,
             donorDistrict: donorData?.district,
@@ -133,7 +140,7 @@ export class RequestListComponent implements OnInit {
   private handleDataChange(reqList: Request[]) {
     this.preLoader = false;
     this.hideWhenNoRequests = !(reqList.length <= 0);
-    this.noData =( reqList.length <= 0);
+    this.noData = reqList.length <= 0;
   }
 
   closeDialog() {

@@ -32,7 +32,7 @@
   </div>
 
   <div class="no-data text-center" *ngIf="noData">
-    <p class="nodata-msg">No users yet!</p>
+    <p class="nodata-msg">No requests yet!</p>
   </div>
   <div class=" table-custom" *ngIf="hideWhenNoRequests">
     <div class="table-row" *ngFor="
@@ -49,28 +49,36 @@
           style="cursor: pointer;margin-left: 20px;">
           <div class="row align-items-end flex-grow-1">
             <span class="text-break font-sm d-flex align-items-center">
-              <i class="fas fa-caret-right m-0" *ngIf="!request.opened"></i>
-              <i class="fas fa-caret-down m-0" *ngIf="request.opened"></i>
-              <img class="d-inline p-0 align-self-start user-image mx-1 img-thumbnail rounded-circle"
+              <span *ngIf="!isGuestUser">
+                <i class="fas fa-caret-right m-0" *ngIf="!request.opened"></i>
+                <i class="fas fa-caret-down m-0" *ngIf="request.opened"></i>
+              </span>
+              <span *ngIf="isGuestUser">
+                <i class="fas fa-caret-right m-0 vis" *ngIf="!request.opened"></i>
+                <i class="fas fa-caret-down m-0" *ngIf="request.opened"></i>
+              </span>
+              <img *ngIf="!isGuestUser" class="d-inline p-0 align-self-start user-image mx-1 img-thumbnail rounded-circle"
                 src="{{(request.requesterPhoto) ? request.requesterPhoto : '/assets/dummy-user.svg'}}"
                 alt="{{request.requesterName}}">
               <div>
                 <strong class="fs-6">{{ request.requesterName }}</strong>
-                <div>has requested contact info of <strong class="fs-6">{{request.donorName}}</strong>
+                <div>{{isGuestUser? 'have':'has'}} requested contact info of <strong
+                    class="fs-6">{{request.donorName}}</strong>
                   (Dist:{{request.donorDistrict}})</div>
               </div>
             </span>
           </div>
           <span class="d-flex align-items-center">
             <span class="border-1 border px-2 rounded border-info me-2">{{request.group}}</span>
-            <span class=" me-2 btn btn-outline-primary btn-sm mb-1" (click)="openDialog(request)" title="Action">
+            <span *ngIf="!isGuestUser" class=" me-2 btn btn-outline-primary btn-sm mb-1" (click)="openDialog(request)"
+              title="Action">
               <em class="fas fa-tasks"></em>
             </span>
 
           </span>
         </div>
         <div *ngIf="request.opened" class="bg-info-subtle">
-          <div class="action-block d-flex justify-content-evenly py-2">
+          <div *ngIf="!isGuestUser" class="action-block d-flex justify-content-evenly py-2">
             <span class="btn btn-outline-success btn-sm me-2">
               <a style="text-decoration: none;" href="tel:{{request.donorMobile}}"><em
                   class="fas fa-phone fa-rotate-90"></em> Donor
@@ -84,6 +92,13 @@
             <span class=" me-2 btn btn-outline-danger btn-sm" (click)="deleteRequest(request)" title="Delete">
               <em class="fas fa-trash-alt"></em>
             </span>
+          </div>
+          <div *ngIf="isGuestUser" class="text-center py-2">
+              <span *ngIf="request.status === 'approved'" class=" me-2 btn btn-outline-success btn-sm" title="Call">
+                <a href="tel:{{request.mobileNumber}}"><em class="fas fa-phone fa-rotate-90"></em></a>
+              </span>
+              <div *ngIf="request.remarks" class="font-sm">{{request.remarks}}</div>
+              <div *ngIf="!request.remarks" class="font-sm">No remarks</div>
           </div>
         </div>
       </div>
@@ -106,7 +121,7 @@
       <div class="form-group mb-2">
         <label for="remarks">Remarks</label>
         <textarea id="remarks" class="form-control" [(ngModel)]="request.remarks" [ngModelOptions]="{standalone: true}"
-          id="email" placeholder="Remarks/Reason"></textarea>
+          placeholder="Remarks/Reason"></textarea>
       </div>
       <div class="mt-3 d-flex justify-content-evenly">
         <button type="submit" class="btn btn-primary me-2" (click)="saveStatus()">Submit</button>

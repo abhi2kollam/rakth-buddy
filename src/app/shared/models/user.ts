@@ -25,3 +25,6 @@ export enum Role {
 export const isAdminRole = (role: Role) => {
   return [Role.Admin, Role.SuperAdmin].includes(role);
 };
+export const isSuperAdminRole = (role: Role) => {
+  return [Role.SuperAdmin].includes(role);
+};

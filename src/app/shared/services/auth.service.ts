@@ -1,5 +1,11 @@
 import { Injectable, NgZone } from '@angular/core';
-import { User, UserExtended } from '../models/user';
+import {
+  Role,
+  User,
+  UserExtended,
+  isAdminRole,
+  isSuperAdminRole,
+} from '../models/user';
 import * as auth from 'firebase/auth';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import {
@@ -15,7 +21,7 @@ import { LoaderService } from './loader.service';
 })
 export class AuthService {
   userData: any; // Save logged in user data
-  userRole = 'guest';
+  userRole: Role = Role.Guest;
   constructor(
     private loaderService: LoaderService,
     public afs: AngularFirestore, // Inject Firestore service
@@ -36,7 +42,7 @@ export class AuthService {
   }
 
   setCurrentUserInfo(currentUser: any) {
-    this.userRole = currentUser?.role ?? 'guest';
+    this.userRole = currentUser?.role ?? Role.Guest;
     this.userData.displayName = currentUser?.displayName;
     this.userData.photoURL = currentUser?.photoURL;
   }
@@ -114,7 +120,7 @@ export class AuthService {
     return (
       user !== null &&
       user.emailVerified !== false &&
-      (this.userRole === 'super-admin' || this.userRole === 'admin')
+      isAdminRole(this.userRole)
     );
   }
   get isSuperAdmin(): boolean {
@@ -122,7 +128,7 @@ export class AuthService {
     return (
       user !== null &&
       user.emailVerified !== false &&
-      this.userRole === 'super-admin'
+      isSuperAdminRole(this.userRole)
     );
   }
 

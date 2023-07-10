@@ -18,7 +18,8 @@ export class UserListComponent implements OnInit {
   hideWhenNoUser: boolean = false;
   noData: boolean = false;
   preLoader: boolean = true;
-  selectedItems: string[] = ['guest', 'admin', 'super-admin'];
+  roles = Role;
+  selectedItems: string[] = [Role.Guest, Role.Admin, Role.SuperAdmin];
 
   constructor(
     public crudApi: UserCrudService,

@@ -34,9 +34,9 @@
               <div class="col-md-12 mb-3">
                 <label>Role</label>
                 <select formControlName="role" class="form-control" required>
-                  <option value="guest">Guest</option>
-                  <option value="admin">Admin</option>
-                  <option value="super-admin">Super Admin</option>
+                  <option [value]="roles.Guest">Guest</option>
+                  <option [value]="roles.Admin">Admin</option>
+                  <option [value]="roles.SuperAdmin">Super Admin</option>
                 </select>
                 <!-- errors-->
                 <p *ngIf="role?.touched && role?.invalid" class="error">
@@ -44,7 +44,7 @@
                 </p>
               </div>
             </div>
-            <div class="row" *ngIf="role?.value ==='admin'">
+            <div class="row" *ngIf="role?.value== roles.Admin">
               <div class="col-md-12 mb-3">
                 <label>Assigned Districts</label>
                 <select multiple name="district" class="form-control" formControlName="assignedDistricts">

@@ -9,6 +9,7 @@ import { UserCrudService } from 'src/app/shared/services/user-crud.service';
 import { DistrictCrudService } from 'src/app/shared/services/district-crud.service';
 import { take } from 'rxjs';
 import { District } from 'src/app/shared/models/district';
+import { Role } from 'src/app/shared/models/user';
 
 @Component({
   selector: 'app-user-donor',
@@ -19,6 +20,8 @@ export class EditUserComponent implements OnInit {
   id: string | null = null;
   currentUser: any = {};
   districts: District[] = [];
+  roles = Role;
+
   constructor(
     private crudApi: UserCrudService,
     private districtApi: DistrictCrudService,
@@ -39,7 +42,7 @@ export class EditUserComponent implements OnInit {
         if (snapshot.exists) {
           const documentData = snapshot.data();
           const formData: any = {};
-          formData.role = documentData.role ?? 'guest';
+          formData.role = documentData.role ?? Role.Guest;
           formData.displayName = documentData.displayName ?? '';
           formData.assignedDistricts = documentData.assignedDistricts ?? [];
           // Process the retrieved document here
